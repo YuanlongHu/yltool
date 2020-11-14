@@ -1,0 +1,25 @@
+Package: yltool
+Title: The Research Tool Used By Yuanlong Hu.
+Version: 0.0.1.9000
+Authors@R: 
+    person(given = "Yuanlong",
+           family = "Hu",
+           role = c("aut", "cre"),
+           email = "huyuanlong1996@163.com",
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: What the package does (one paragraph).
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Imports: 
+    immcp,
+    shiny,
+    shinydashboard,
+    visNetwork,
+    stringr,
+    magrittr,
+    arules,
+    methods,
+    utils
