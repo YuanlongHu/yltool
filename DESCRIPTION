@@ -22,4 +22,5 @@ Imports:
     magrittr,
     arules,
     methods,
-    utils
+    utils,
+    Hmisc

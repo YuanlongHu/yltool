@@ -11,11 +11,33 @@
 
 
 
-sim_expr <- function(data, method=c("pearson","spearman")){
+sim_expr <- function(data, gene, method=c("pearson","spearman"), pcutoff=0.05,cut=2){
 
-  cormat <- rcorr(data, type=method[1])
-  cormat <- convCorrMatrix(cormat$r,cormat$P)
-  return(cormat)
+data <- as.data.frame(data)
+seed <- as.numeric(data[gene,])
+
+if (cut > (nrow(data)/2)-1) {
+   stop("cut > (nrow(data)/2)-1)")
+}
+
+data$spilt <- cut(1:nrow(data), cut, labels=F)
+data <- split(data,data$spilt)
+
+res <- lapply(data, function(x){
+  x <- x[,-ncol(x)]
+  x <- as.data.frame(t(x))
+  x$seed <- seed
+  res <- rcorr(as.matrix(x))
+  res <- convCorrMatrix(res$r,res$P)
+  res <- res[res$row=="seed",]
+  res <- res[,-1]
+  colnames(res) <- c("Gene","Cor","Pvalue")
+  res <- res[res$Pvalue < pcutoff,] 
+  return(res)
+})
+
+res <- Reduce(rbind,res)
+return(res)
 }
 
 
