@@ -35,11 +35,12 @@ sim_expr <- function(data, gene, method=c("pearson","spearman"), pcutoff=0.05, c
     res <- convCorrMatrix(res$r,res$P)
     return(res)
   })
+  res <- Reduce(rbind,res)
   res <- res[res$column=="seed",]
   res <- res[,-2]
   colnames(res) <- c("Object","Cor","Pvalue")
   res <- res[res$Pvalue < pcutoff,]
-  res <- Reduce(rbind,res)
+
   return(res)
 }
 
