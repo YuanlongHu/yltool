@@ -3,6 +3,10 @@
 #'
 #' @title sim_expr
 #' @param data data
+#' @param gene gene
+#' @param method one of pearson and spearman
+#' @param pcutoff <0.05
+#' @param cut 2
 #' @importFrom Hmisc rcorr
 #' @importFrom magrittr %>%
 #' @return a data.frame

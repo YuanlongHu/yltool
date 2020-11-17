@@ -5,8 +5,6 @@
 #' @export
 #' @importFrom shiny shinyApp
 #' @author Yuanlong Hu
-#' @examples
-#'    AssoAnalysis()
 
 AssoAnalysis <- function(){
 
@@ -29,6 +27,7 @@ AssoAnalysis <- function(){
 #' @importFrom shiny radioButtons
 #' @importFrom shiny numericInput
 #' @importFrom shiny sliderInput
+#' @importFrom shiny icon
 #' @importFrom visNetwork visNetworkOutput
 #' @noRd
 app_ui_apr <- function(request) {
@@ -172,6 +171,7 @@ app_ui_apr <- function(request) {
 #' @importFrom magrittr %>%
 #' @importFrom visNetwork renderVisNetwork
 #' @importFrom utils read.csv
+#' @importFrom DT renderDataTable
 #' @noRd
 #' @author Yuanlong Hu
 
