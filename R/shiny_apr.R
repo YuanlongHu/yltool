@@ -6,7 +6,7 @@
 #' @importFrom shiny shinyApp
 #' @author Yuanlong Hu
 #' @examples
-#'    run_app()
+#'    AssoAnalysis()
 
 AssoAnalysis <- function(){
 
