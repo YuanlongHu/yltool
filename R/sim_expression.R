@@ -8,7 +8,6 @@
 #' @param pcutoff <0.05
 #' @param cut 2
 #' @importFrom Hmisc rcorr
-#' @importFrom magrittr %>%
 #' @return a data.frame
 #' @export
 #' @author Yuanlong Hu
