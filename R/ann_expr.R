@@ -6,7 +6,7 @@
 #' @param ann_db The name of the annotation package
 #' @param ann_df gene symbol data frame
 #' @param Stat "max","mean","median","min","IQR"
-#' @importFrom genefilter featureNames
+#' @importFrom Biobase featureNames
 #' @importFrom genefilter findLargest
 #' @importFrom Biobase exprs
 #' @return a data.frame

@@ -17,7 +17,7 @@ sim_expr(
 
 \item{gene}{gene}
 
-\item{method}{one of pearson and spearman}
+\item{method}{one of pearson and spearman.}
 
 \item{pcutoff}{<0.05}
 
