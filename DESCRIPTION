@@ -1,6 +1,6 @@
 Package: yltool
 Title: The Research Tool Used By Yuanlong Hu.
-Version: 0.0.6
+Version: 0.1.0
 Authors@R: 
     person(given = "Yuanlong",
            family = "Hu",
@@ -28,7 +28,10 @@ Imports:
     utils,
     Hmisc,
     DT,
-    GSVA
+    GSVA,
+    xCell,
+    Biobase,
+    genefilter
 Suggests: 
     knitr,
     rmarkdown
