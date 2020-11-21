@@ -39,6 +39,56 @@ ann_expr <- function(data, ann_db, ann_df,
 
 }
 
+#' Convert probe ID to gene symbol using GPL
+#'
+#'
+#' @title ann_expr2
+#' @param data data
+#' @param GPL GPL file
+#' @param probe_symbol probe id and gene symbol
+#' @param Stat "max","mean","median","min","IQR"
+#' @importFrom Biobase exprs
+#' @return a data.frame
+#' @export
+#' @author Yuanlong Hu
+
+ann_expr2 <- function(data, GPL, probe_symbol=c("NAME","GENE_SYMBOL"),
+                      Stat=c("max","mean","median","min","IQR")){
+
+  # read gpl file
+  gpl <- read.table(GPL,
+                 header = TRUE, fill = T,sep = "\t",
+                 comment.char = "#",
+                 stringsAsFactors = FALSE,
+                 quote = "")
+  gpl <- gpl[,probe_symbol]
+  colnames(gpl) <- c('probe_id','symbol')
+
+
+
+  datExpr <- exprs(data)
+  datExpr <- as.data.frame(datExpr)
+  datExpr$probe_id <- rownames(datExpr)
+
+  datExpr <- merge(gpl, datExpr, by = "probe_id")
+
+  datExpr <- datExpr[datExpr$symbol != "",]
+
+  if(Stat[1]=="max") datExpr <- aggregate(datExpr, by=list(datExpr$symbol), max)
+  if(Stat[1]=="mean") datExpr <- aggregate(datExpr, by=list(datExpr$symbol), mean)
+  if(Stat[1]=="median") datExpr <- aggregate(datExpr, by=list(datExpr$symbol), median)
+  if(Stat[1]=="min") datExpr <- aggregate(datExpr, by=list(datExpr$symbol), min)
+  if(Stat[1]=="IQR") datExpr <- aggregate(datExpr, by=list(datExpr$symbol), IQR)
+
+
+  #colnames(data_GSE47460_GPL14550)
+
+  rownames(datExpr) <- datExpr$symbol
+  datExpr <- datExpr[,-c(1:3)]
+  return(datExpr)
+}
+
+
 
 #' Add a row
 #'
