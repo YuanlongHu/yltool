@@ -72,11 +72,11 @@ convCorrMatrix <- function(mat, pmat) {
 #' @param data expr data
 #' @param x x
 #' @param y y
-#' @param group
-#' @param point_group
-#' @param geom_smooth
+#' @param group group
+#' @param point_group logical
+#' @param geom_smooth logical
 #' @param method c("lm","glm","gam","loess")
-#' @param smooth_group
+#' @param smooth_group logical
 #' @importFrom ggplot2 ggplot
 #' @importFrom ggplot2 geom_point
 #' @importFrom ggplot2 geom_smooth

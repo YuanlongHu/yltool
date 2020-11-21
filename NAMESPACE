@@ -3,6 +3,7 @@
 export(AssoAnalysis)
 export(add_row)
 export(ann_expr)
+export(ann_expr2)
 export(pathway_gsva)
 export(plot_point)
 export(sim_expr)
