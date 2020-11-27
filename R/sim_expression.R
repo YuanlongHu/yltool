@@ -48,7 +48,7 @@ sim_expr <- function(data, gene, method=c("pearson","spearman","MIC"), pcutoff=0
       x <- as.data.frame(t(x))
       x$seed <- seed
       res <- mine(x,normalization = F, n.cores = 4)$MIC
-      p_value <- MIC_pvalue(x,res, n=n)
+      p_value <- MIC_pvalue(x=x, res, n=n)
       res <- convCorrMatrix(res,p_value)
       return(res)
     })
@@ -148,12 +148,13 @@ plot_point <- function(data, x, y,
 #' @export
 
 MIC_pvalue <- function(x,MIC_mat, n){
+  data <- x
   p_num <- MIC_mat
   p_num[abs(p_num)>0] <- 1
 
   set.seed(1234)
   for (i in 1:n) {
-    random <- apply(x,2,sample)
+    random <- apply(data,2,sample)
     micN <- mine(random, normalization = F, n.cores = 4)$MIC
     micN[abs(micN)>=abs(MIC_mat)] <- 1
     micN[abs(micN)<abs(MIC_mat)] <- 0
