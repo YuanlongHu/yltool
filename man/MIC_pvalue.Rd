@@ -4,9 +4,11 @@
 \alias{MIC_pvalue}
 \title{MIC_pvalue}
 \usage{
-MIC_pvalue(MIC_mat, n)
+MIC_pvalue(x, MIC_mat, n)
 }
 \arguments{
+\item{x}{data matrix}
+
 \item{MIC_mat}{MIC matrix}
 
 \item{n}{n}
