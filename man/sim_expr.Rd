@@ -8,6 +8,7 @@ sim_expr(
   data,
   gene,
   method = c("pearson", "spearman", "MIC"),
+  MIC_pvalue = FALSE,
   pcutoff = 0.05,
   cut = 2,
   n = 100
@@ -19,6 +20,8 @@ sim_expr(
 \item{gene}{gene}
 
 \item{method}{one of pearson and spearman.}
+
+\item{MIC_pvalue}{MIC p-value}
 
 \item{pcutoff}{<0.05}
 

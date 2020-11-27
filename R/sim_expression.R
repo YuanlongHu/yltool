@@ -5,6 +5,7 @@
 #' @param data data
 #' @param gene gene
 #' @param method one of pearson and spearman.
+#' @param MIC_pvalue MIC p-value
 #' @param pcutoff <0.05
 #' @param cut 2
 #' @param n 10
@@ -17,7 +18,7 @@
 
 
 
-sim_expr <- function(data, gene, method=c("pearson","spearman","MIC"), pcutoff=0.05, cut=2, n=100){
+sim_expr <- function(data, gene, method=c("pearson","spearman","MIC"), MIC_pvalue=FALSE, pcutoff=0.05, cut=2, n=100){
 
   data <- as.data.frame(data)
   seed <- as.numeric(data[gene,])
@@ -48,7 +49,14 @@ sim_expr <- function(data, gene, method=c("pearson","spearman","MIC"), pcutoff=0
       x <- as.data.frame(t(x))
       x$seed <- seed
       res <- mine(x,normalization = F, n.cores = 4)$MIC
-      p_value <- MIC_pvalue(x=x, res, n=n)
+      if(MIC_pvalue){
+        p_value <- MIC_pvalue(x=x, res, n=n)
+      }else{
+        p_value <- res
+        p_value <- as.matrix(p_value)
+        p_value <- 0
+      }
+
       res <- convCorrMatrix(res,p_value)
       return(res)
     })
