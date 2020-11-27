@@ -48,7 +48,7 @@ sim_expr <- function(data, gene, method=c("pearson","spearman","MIC"), pcutoff=0
       x <- as.data.frame(t(x))
       x$seed <- seed
       res <- mine(x,normalization = F, n.cores = 4)$MIC
-      p_value <- MIC_pvalue(res, n)
+      p_value <- MIC_pvalue(res, n=n)
       res <- convCorrMatrix(res,p_value)
       return(res)
     })
