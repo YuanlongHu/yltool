@@ -40,6 +40,12 @@ sim_expr <- function(data, gene, method=c("pearson","spearman","MIC"), MIC_pvalu
       res <- convCorrMatrix(res$r,res$P)
       return(res)
   })
+
+    res <- Reduce(rbind,res)
+    res <- res[res$column=="seed",]
+    res <- res[,-2]
+    colnames(res) <- c("Object","Cor","Pvalue")
+    res <- res[res$Pvalue < pcutoff,]
   }
 
   if(method =="MIC"){
@@ -60,13 +66,19 @@ sim_expr <- function(data, gene, method=c("pearson","spearman","MIC"), MIC_pvalu
       res <- convCorrMatrix(res,p_value)
       return(res)
     })
-  }
 
-  res <- Reduce(rbind,res)
-  res <- res[res$column=="seed",]
-  res <- res[,-2]
-  colnames(res) <- c("Object","Cor","Pvalue")
-  res <- res[res$Pvalue < pcutoff,]
+    res <- Reduce(rbind,res)
+    res <- res[res$column=="seed",]
+    res <- res[,-2]
+
+    if(!MIC_pvalue){
+      colnames(res) <- c("Object","MIC", "pvalue")
+    }else{
+      res <- res[,-3]
+      colnames(res) <- c("Object","MIC")
+    }
+
+  }
 
   return(res)
 }
