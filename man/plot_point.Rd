@@ -22,7 +22,15 @@ plot_point(
 
 \item{y}{y}
 
+\item{group}{group}
+
+\item{point_group}{logical}
+
+\item{geom_smooth}{logical}
+
 \item{method}{c("lm","glm","gam","loess")}
+
+\item{smooth_group}{logical}
 }
 \value{
 ggplot object

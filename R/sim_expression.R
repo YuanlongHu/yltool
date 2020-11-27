@@ -7,14 +7,17 @@
 #' @param method one of pearson and spearman.
 #' @param pcutoff <0.05
 #' @param cut 2
+#' @param n 10
 #' @importFrom Hmisc rcorr
+#' @importFrom pbapply pblapply
+#' @importFrom minerva mine
 #' @return a data.frame
 #' @export
 #' @author Yuanlong Hu
 
 
 
-sim_expr <- function(data, gene, method=c("pearson","spearman"), pcutoff=0.05, cut=2){
+sim_expr <- function(data, gene, method=c("pearson","spearman","MIC"), pcutoff=0.05, cut=2, n=100){
 
   data <- as.data.frame(data)
   seed <- as.numeric(data[gene,])
@@ -26,14 +29,31 @@ sim_expr <- function(data, gene, method=c("pearson","spearman"), pcutoff=0.05, c
   data$spilt <- cut(1:nrow(data), cut, labels=F)
   data <- split(data,data$spilt)
 
-  res <- lapply(data, function(x){
-    x <- x[,-ncol(x)]
-    x <- as.data.frame(t(x))
-    x$seed <- seed
-    res <- rcorr(as.matrix(x), type=method[1])
-    res <- convCorrMatrix(res$r,res$P)
-    return(res)
+  if(method %in% c("pearson","spearman")){
+
+    res <- pblapply(data, function(x){
+      x <- x[,-ncol(x)]
+      x <- as.data.frame(t(x))
+      x$seed <- seed
+      res <- rcorr(as.matrix(x), type=method[1])
+      res <- convCorrMatrix(res$r,res$P)
+      return(res)
   })
+  }
+
+  if(method =="MIC"){
+
+    res <- pblapply(data, function(x){
+      x <- x[,-ncol(x)]
+      x <- as.data.frame(t(x))
+      x$seed <- seed
+      res <- mine(x,normalization = F, n.cores = 4)$MIC
+      p_value <- MIC_pvalue(res, n)
+      res <- convCorrMatrix(res,p_value)
+      return(res)
+    })
+  }
+
   res <- Reduce(rbind,res)
   res <- res[res$column=="seed",]
   res <- res[,-2]
@@ -115,3 +135,29 @@ plot_point <- function(data, x, y,
   return(p)
 }
 
+#' plot cor
+#'
+#'
+#' @title MIC_pvalue
+#' @param MIC_mat MIC matrix
+#' @param n n
+#' @importFrom minerva mine
+#' @return p-value matrix
+#' @author Yuanlong Hu
+#' @export
+
+MIC_pvalue <- function(MIC_mat, n){
+  p_num <- MIC_mat
+  p_num[abs(p_num)>0] <- 1
+
+  set.seed(1234)
+  for (i in 1:n) {
+    random <- apply(x,2,sample)
+    micN <- mine(random, normalization = F, n.cores = 4)$MIC
+    micN[abs(micN)>=abs(MIC_mat)] <- 1
+    micN[abs(micN)<abs(MIC_mat)] <- 0
+    p_num <- p_num + micN
+  }
+
+  p <- p_num/(n+1)
+}

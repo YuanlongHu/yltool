@@ -7,9 +7,10 @@
 sim_expr(
   data,
   gene,
-  method = c("pearson", "spearman"),
+  method = c("pearson", "spearman", "MIC"),
   pcutoff = 0.05,
-  cut = 2
+  cut = 2,
+  n = 100
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ sim_expr(
 \item{pcutoff}{<0.05}
 
 \item{cut}{2}
+
+\item{n}{10}
 }
 \value{
 a data.frame
