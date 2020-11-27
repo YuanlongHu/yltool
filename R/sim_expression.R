@@ -54,7 +54,7 @@ sim_expr <- function(data, gene, method=c("pearson","spearman","MIC"), MIC_pvalu
       }else{
         p_value <- res
         p_value <- as.matrix(p_value)
-        p_value <- 0
+        p_value <- 0.00001
       }
 
       res <- convCorrMatrix(res,p_value)
