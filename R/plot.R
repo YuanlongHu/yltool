@@ -15,6 +15,7 @@
 #' @importFrom ggplot2 geom_point
 #' @importFrom ggplot2 geom_smooth
 #' @importFrom ggplot2 labs
+#' @importFrom ggplot2 theme_minimal
 #' @importFrom Hmisc rcorr
 #' @return a ggplot
 #' @export
@@ -25,7 +26,7 @@ plot_cor <- function(expr,gene.x, gene.y,
                      geom_smooth=TRUE, method="lm",
                      group=NULL,
                      group_point=TRUE, group_smooth=TRUE
-                     ){
+){
 
 
   data <- data.frame(x=as.numeric(expr[gene.x,]),
@@ -43,16 +44,18 @@ plot_cor <- function(expr,gene.x, gene.y,
   }
 
   p <- p + labs(x=gene.x, y=gene.y)+
-       theme_minimal()
+    theme_minimal()
 
   if (group_smooth) {
-    p <- p + geom_smooth(method = method)
-  }else{
     p <- p + geom_smooth(aes(color=group),method = method)
+  }else{
+    p <- p + geom_smooth(method = method)
   }
 
-  res_cor <- rcorr(data[,1:2], type = "pearson")
-  message(paste0(res_cor[[1]][1,2], "\n",res_cor[[2]][1,2]))
+  res_cor <- rcorr(as.matrix(data[,1:2]), type = "pearson")
+  message(paste0("Pearson: ",round(res_cor[[1]][1,2],3), "\n",
+                 "P-value: ",signif(res_cor[[3]][1,2],3), "\n",
+                 "N: ", res_cor[[2]][1,2]))
   return(p)
 }
 
