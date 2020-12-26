@@ -69,7 +69,12 @@ ann_expr2 <- function(data, GPL, probe_symbol=c("NAME","GENE_SYMBOL"),
   gpl <- gpl[,probe_symbol]
   colnames(gpl) <- c('probe_id','symbol')
 
-  datExpr <- exprs(data)
+  if (is.data.frame(data)) {
+    datExpr <- data
+  }else{
+    datExpr <- exprs(data)
+  }
+
   datExpr <- as.data.frame(datExpr)
   datExpr$probe_id <- rownames(datExpr)
 
