@@ -56,15 +56,18 @@ ann_expr2 <- function(data, GPL, probe_symbol=c("NAME","GENE_SYMBOL"),
                       Stat=c("max","mean","median","min","IQR")){
 
   # read gpl file
+  if(is.data.frame(GPL)){
+    gpl <- GPL[,1:2]
+  }else{
   gpl <- read.table(GPL,
                  header = TRUE, fill = T,sep = "\t",
                  comment.char = "#",
                  stringsAsFactors = FALSE,
                  quote = "")
   gpl <- gpl[,probe_symbol]
+  }
+
   colnames(gpl) <- c('probe_id','symbol')
-
-
 
   datExpr <- exprs(data)
   datExpr <- as.data.frame(datExpr)
