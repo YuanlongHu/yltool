@@ -86,3 +86,37 @@ plotBorutaImpHistory <- function(res,
     theme(legend.justification=c(1,0), legend.position=c(1,0))
   return(p)
 }
+
+
+#' plot ExprBox
+#'
+#'
+#' @title plotExprBox
+#' @param expr the result of Boruta
+#' @param select a vector.
+#' @param pdata pdata
+#' @param comparisons a list
+#' @importFrom ggplot2 ggplot
+#' @importFrom ggplot2 aes
+#' @importFrom ggplot2 geom_violin
+#' @importFrom ggplot2 geom_boxplot
+#' @importFrom ggplot2 theme_minimal
+#' @importFrom ggsci scale_fill_jco
+#' @importFrom ggpubr stat_compare_means
+#' @return a Boruta object
+#' @export
+#' @author Yuanlong Hu
+
+plotExprBox <- function(expr, select, pdata, comparisons=list(c("C1","C2"))){
+
+  expr <- data.frame(object=as.numeric(expr[select,]),
+                     group=pdata)
+  p <- ggplot(expr, aes(x=group, y=object, fill=group))+
+    geom_violin()+
+    geom_boxplot(width=0.2, fill="white")+
+    scale_fill_jco()+
+    stat_compare_means(comparisons = comparisons)+
+    theme_minimal()
+  return(p)
+
+}
