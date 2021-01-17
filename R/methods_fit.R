@@ -103,7 +103,7 @@ plotBorutaImpHistory <- function(res,
 #' @importFrom ggplot2 theme_minimal
 #' @importFrom ggsci scale_fill_jco
 #' @importFrom ggpubr stat_compare_means
-#' @return a Boruta object
+#' @return a ggplot2 object
 #' @export
 #' @author Yuanlong Hu
 
@@ -132,12 +132,15 @@ plotExprBox <- function(expr, select, pdata, comparisons=list(c("C1","C2"))){
 #' @param ylab a charact
 #' @importFrom ggplot2 ggplot
 #' @importFrom ggplot2 aes
-#' @importFrom ggplot2 geom_violin
-#' @importFrom ggplot2 geom_boxplot
+#' @importFrom ggplot2 geom_point
+#' @importFrom ggplot2 geom_hline
+#' @importFrom ggplot2 geom_vline
+#' @importFrom ggplot2 theme
+#' @importFrom ggplot2 labs
 #' @importFrom ggplot2 theme_minimal
-#' @importFrom ggsci scale_fill_jco
-#' @importFrom ggpubr stat_compare_means
-#' @return a Boruta object
+#' @importFrom ggplot2 scale_color_manual
+#' @importFrom ggrepel geom_text_repel
+#' @return a ggplot2 object
 #' @export
 #' @author Yuanlong Hu
 
@@ -172,4 +175,36 @@ plotExprVolcano <- function(res, selectlabels=NULL,logFCcutoff=1,
   }
 
   return(p)
+}
+
+
+#' plot GroupBar
+#'
+#'
+#' @title plotGroupBar
+#' @param pdata pdata
+#' @param x a vector.
+#' @param fill logFC cutoff
+#' @importFrom ggplot2 ggplot
+#' @importFrom ggplot2 aes
+#' @importFrom ggplot2 geom_bar
+#' @importFrom ggplot2 geom_text
+#' @importFrom ggplot2 theme
+#' @importFrom ggplot2 theme_minimal
+#' @importFrom ggplot2 scale_color_manual
+#' @importFrom ggsci scale_fill_jco
+#' @return a ggplot2 object
+#' @export
+#' @author Yuanlong Hu
+
+
+plotGroupBar <- function(pdata, x, fill){
+  pdata <- pdata[,c(x,fill)]
+  names(pdata) <- c("x","fill")
+  ggplot(pdata, aes(x=x, fill=fill))+
+    geom_bar(stat="count",width=1,position='fill',color="white")+
+    geom_text(stat='count',aes(label=scales::percent(..count../sum(..count..))),
+              color="black", size=3.5,position=position_fill(0.5))+
+    theme_minimal()+
+    scale_fill_jco()
 }

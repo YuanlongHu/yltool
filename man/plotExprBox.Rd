@@ -16,7 +16,7 @@ plotExprBox(expr, select, pdata, comparisons = list(c("C1", "C2")))
 \item{comparisons}{a list}
 }
 \value{
-a Boruta object
+a ggplot2 object
 }
 \description{
 plot ExprBox

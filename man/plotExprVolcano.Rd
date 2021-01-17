@@ -24,7 +24,7 @@ plotExprVolcano(
 \item{ylab}{a charact}
 }
 \value{
-a Boruta object
+a ggplot2 object
 }
 \description{
 plot ExprVolcano
