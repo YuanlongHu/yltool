@@ -48,7 +48,7 @@ select_lm_single <- function(expr, pdata){
 select_cox_single <- function(expr, time, status){
 
   formulas <- sapply(rownames(expr),
-                          function(x) as.formula(paste('Surv(time, status)~', "`",x,"`")))
+                          function(x) as.formula(paste0('Surv(time, status)~', "`",x,"`")))
 
   expr <- as.data.frame(t(expr))
   expr$time <- as.numeric(time)
