@@ -33,6 +33,51 @@ select_lm_single <- function(expr, pdata){
   return(res_list)
 }
 
+#' Fit single cox methods
+#'
+#'
+#' @title select_cox_single
+#' @param expr a matrix of expression values where rows correspond to genes and columns correspond to samples.
+#' @param time a vector.
+#' @param status status
+#' @importFrom pbapply pblapply
+#' @return a data.frame
+#' @export
+#' @author Yuanlong Hu
+
+select_cox_single <- function(expr, time, status){
+
+  formulas <- sapply(rownames(covariates),
+                          function(x) as.formula(paste('Surv(time, status)~', x)))
+
+  expr <- as.data.frame(t(expr))
+  expr$time <- as.numeric(time)
+  expr$status <- factor(status)
+  message("*** Fitting Cox Models ***")
+  models <- pblapply(formulas, function(x){coxph(x, data = expr)})
+
+  message("*** Summary Cox Models Results ***")
+  res <- pblapply(models,function(x){
+                   x <- summary(x)
+                   p.value<-signif(x$wald["pvalue"], digits=2)
+                   wald.test<-signif(x$wald["test"], digits=2)
+                   beta<-signif(x$coef[1], digits=2);#coeficient beta
+                  HR <-signif(x$coef[2], digits=2);#exp(beta)
+                  HR.confint.lower <- signif(x$conf.int[,"lower .95"],2)
+                  HR.confint.upper <- signif(x$conf.int[,"upper .95"],2)
+                  # HR <- paste0(HR, " (",
+                  #                       HR.confint.lower, "-", HR.confint.upper, ")")
+                           res<-c(beta, HR, HR.confint.lower, HR.confint.upper,wald.test, p.value)
+                           names(res)<-c("beta", "HR", "CI_lower", "CI_upper", "wald.test", "p.value")
+                           return(res)
+                           #return(exp(cbind(coef(x),confint(x))))
+                         })
+  res <- t(as.data.frame(res, check.names = FALSE))
+  res <- as.data.frame(res)
+  return(res)
+  }
+
+
 #' Select by Boruta
 #'
 #'
