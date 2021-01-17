@@ -52,7 +52,7 @@ select_cox_single <- function(expr, time, status){
 
   expr <- as.data.frame(t(expr))
   expr$time <- as.numeric(time)
-  expr$status <- factor(status)
+  expr$status <- as.numeric(status)
   message("*** Fitting Cox Models ***")
   models <- pblapply(formulas, function(x){coxph(x, data = expr)})
 
