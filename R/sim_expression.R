@@ -108,8 +108,8 @@ convCorrMatrix <- function(mat, pmat) {
 #' plot cor
 #'
 #'
-#' @title plot_point
-#' @param data expr data
+#' @title plotExprCor
+#' @param expr expr data
 #' @param x x
 #' @param y y
 #' @param group group
@@ -126,13 +126,14 @@ convCorrMatrix <- function(mat, pmat) {
 #' @export
 
 
-plot_point <- function(data, x, y,
+plotExprCor <- function(expr, x, y,
                        group=NULL, point_group=TRUE,
-                       geom_smooth=TRUE, method=c("lm","glm","gam","loess"), smooth_group=TRUE){
+                       geom_smooth=TRUE, method=c("lm","glm","gam","loess"),
+                       smooth_group=TRUE){
 
 
-  df <- data.frame(x=as.numeric(data[x,]),
-                   y=as.numeric(data[y,])
+  df <- data.frame(x=as.numeric(expr[x,]),
+                   y=as.numeric(expr[y,])
                    )
   df$group <- group
   p <- ggplot(df, aes(x=x, y=y))
@@ -152,6 +153,8 @@ plot_point <- function(data, x, y,
     }
 
   }
+
+  p <- p+labs(x=x, y=y)
   return(p)
 }
 

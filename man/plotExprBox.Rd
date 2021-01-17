@@ -7,7 +7,7 @@
 plotExprBox(expr, select, pdata, comparisons = list(c("C1", "C2")))
 }
 \arguments{
-\item{expr}{the result of Boruta}
+\item{expr}{the expr data}
 
 \item{select}{a vector.}
 
