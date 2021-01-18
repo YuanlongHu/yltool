@@ -259,6 +259,7 @@ plotGroupBar <- function(pdata, x, fill){
 #' @param pdata a vector.
 #' @param addEllipses TRUE or FALSE
 #' @param ellipse.type "convex"，"confidence"
+#' @param ... other
 #' @importFrom FactoMineR PCA
 #' @importFrom factoextra fviz_pca_ind
 #' @importFrom ggplot2 theme_minimal
@@ -267,7 +268,10 @@ plotGroupBar <- function(pdata, x, fill){
 #' @author Yuanlong Hu
 
 plotExprPCA <- function(expr, feature, pdata,
-                        addEllipses=TRUE, ellipse.type=""){
+                        addEllipses=TRUE,
+                        ellipse.type="confidence",
+                        ellipse.level=0.95,
+                        ...){
 
   expr <- expr[feature,]
   expr <- na.omit(expr)
@@ -282,7 +286,7 @@ plotExprPCA <- function(expr, feature, pdata,
                    #col.var = "black",#alpha.ind = 0.5,
                    alpha.var=0.7,ellipse.type=ellipse.type,
                     #gradient.cols = "RdYlBu",col.var = "black",
-                    repel = F,title = "",legend.title = "Group") +
+                    repel = F,title = "",legend.title = "Group",...) +
         #theme(legend.position = "right")+
         theme_minimal()
   return(p)

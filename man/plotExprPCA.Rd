@@ -4,7 +4,15 @@
 \alias{plotExprPCA}
 \title{plotExprPCA}
 \usage{
-plotExprPCA(expr, feature, pdata, addEllipses = TRUE, ellipse.type = "")
+plotExprPCA(
+  expr,
+  feature,
+  pdata,
+  addEllipses = TRUE,
+  ellipse.type = "confidence",
+  ellipse.level = 0.95,
+  ...
+)
 }
 \arguments{
 \item{expr}{expr}
@@ -16,6 +24,8 @@ plotExprPCA(expr, feature, pdata, addEllipses = TRUE, ellipse.type = "")
 \item{addEllipses}{TRUE or FALSE}
 
 \item{ellipse.type}{"convex"，"confidence"}
+
+\item{...}{other}
 }
 \value{
 a ggplot2 object
