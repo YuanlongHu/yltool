@@ -25,6 +25,8 @@ plotExprPCA(
 
 \item{ellipse.type}{"convex"，"confidence"}
 
+\item{ellipse.level}{0.95}
+
 \item{...}{other}
 }
 \value{
