@@ -1,6 +1,6 @@
 Package: yltool
 Title: The Research Tool Used By Yuanlong Hu.
-Version: 0.3.6
+Version: 0.3.7
 Authors@R: 
     person(given = "Yuanlong",
            family = "Hu",
@@ -37,7 +37,9 @@ Imports:
     Boruta,
     ggplot2,
     ggsci,
-    ggpubr
+    ggpubr,
+    FactoMineR,
+    factoextra
 Suggests: 
     knitr,
     rmarkdown

@@ -196,7 +196,7 @@ plotExprVolcano <- function(res, selectlabels=NULL,logFCcutoff=1,
   res$SYMBOL <- rownames(res)
   res$group <- ifelse(res$adj.P.Val >=0.05|abs(res$logFC)< logFCcutoff,"none",
                       ifelse(res$logFC>=logFCcutoff,"up","down"))
-  res$rank <- rank(abs(res$logFC))
+  res$labels <- ifelse(res$SYMBOL %in% selectlabels, res$SYMBOL, NA)
 
   p <- ggplot(res, aes(x=logFC, y=-log10(adj.P.Val), color=group))+
     geom_point(size=2,alpha=0.5)+
@@ -208,16 +208,12 @@ plotExprVolcano <- function(res, selectlabels=NULL,logFCcutoff=1,
     labs(x=xlab, y=ylab, color="Change")+
     scale_color_manual(values=c("down"="#0073C2FF",
                                 "none"="#868686FF",
-                                "up"="#EFC000FF")
-                       )
-
-  if(!is.null(select_labels)){
-    res$labels <- ifelse(res$SYMBOL %in% select_labels, res$SYMBOL, NA)
-    p <- p + geom_text_repel(aes(label=labels),size = 2.25,
+                                "up"="#EFC000FF"))+
+    geom_text_repel(aes(label=labels),size = 2.25,
                     segment.color = "black",
                     box.padding = unit(0.5, "lines"),
                     point.padding = unit(0.1, "lines"))
-  }
+
 
   return(p)
 }
@@ -252,4 +248,40 @@ plotGroupBar <- function(pdata, x, fill){
               color="black", size=3.5,position=position_fill(0.5))+
     theme_minimal()+
     scale_fill_jco()
+}
+
+#' plot PCA
+#'
+#'
+#' @title plotExprPCA
+#' @param expr expr
+#' @param feature feature
+#' @param pdata a vector.
+#' @importFrom FactoMineR PCA
+#' @importFrom factoextra fviz_pca_ind
+#' @importFrom ggplot2 theme_minimal
+#' @return a ggplot2 object
+#' @export
+#' @author Yuanlong Hu
+
+plotExprPCA <- function(expr, feature, pdata){
+
+  expr <- expr[feature,]
+  expr <- na.omit(expr)
+  message(paste("** A total of",nrow(expr), "features. **"))
+  expr <- as.data.frame(t(expr))
+  res_pca <- PCA(expr, graph = FALSE)
+  p <- fviz_pca_ind(res_pca,
+                   col.ind = factor(pdata),
+                   palette = "jco",
+                   addEllipses = TRUE,
+                   label = "none",pointsize = 2.5,
+                   #col.var = "black",#alpha.ind = 0.5,
+                   alpha.var=0.7,
+                    #gradient.cols = "RdYlBu",col.var = "black",
+                    repel = F,title = "",legend.title = "Group") +
+        #theme(legend.position = "right")+
+        theme_minimal()
+  return(p)
+
 }
