@@ -279,18 +279,31 @@ plotExprPCA <- function(expr, feature, pdata,
   message(paste("** A total of",nrow(expr), "features. **"))
   expr <- as.data.frame(t(expr))
   res_pca <- PCA(expr, graph = FALSE)
-  p <- fviz_pca_ind(res_pca,
+  if(ellipse.type=="confidence"){
+    p <- fviz_pca_ind(res_pca,
+                      col.ind = factor(pdata),
+                      palette = "jco",
+                      addEllipses = addEllipses,
+                      label = "none",pointsize = 2.5,
+                      #col.var = "black",#alpha.ind = 0.5,
+                      alpha.var=0.7,ellipse.level=ellipse.level,
+                      #gradient.cols = "RdYlBu",col.var = "black",
+                      repel = F,title = "",legend.title = "Group",...) +
+      #theme(legend.position = "right")+
+      theme_minimal()
+  }else{
+    p <- fviz_pca_ind(res_pca,
                    col.ind = factor(pdata),
                    palette = "jco",
                    addEllipses = addEllipses,
                    label = "none",pointsize = 2.5,
                    #col.var = "black",#alpha.ind = 0.5,
                    alpha.var=0.7,ellipse.type=ellipse.type,
-                   ellipse.level=ellipse.level,
+
                     #gradient.cols = "RdYlBu",col.var = "black",
                     repel = F,title = "",legend.title = "Group",...) +
         #theme(legend.position = "right")+
         theme_minimal()
+  }
   return(p)
-
 }
