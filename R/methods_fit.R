@@ -40,12 +40,13 @@ select_lm_single <- function(expr, pdata){
 #' @param expr a matrix of expression values where rows correspond to genes and columns correspond to samples.
 #' @param time a vector.
 #' @param status status
+#' @param digits digits
 #' @importFrom pbapply pblapply
 #' @return a data.frame
 #' @export
 #' @author Yuanlong Hu
 
-select_cox_single <- function(expr, time, status){
+select_cox_single <- function(expr, time, status, digits=2){
 
   formulas <- sapply(rownames(expr),
                           function(x) as.formula(paste0('Surv(time, status)~', "`",x,"`")))
@@ -59,12 +60,12 @@ select_cox_single <- function(expr, time, status){
   message("*** Summary Cox Models Results ***")
   res <- pblapply(models,function(x){
                    x <- summary(x)
-                   p.value<-signif(x$wald["pvalue"], digits=2)
-                   wald.test<-signif(x$wald["test"], digits=2)
-                   beta<-signif(x$coef[1], digits=2);#coeficient beta
-                  HR <-signif(x$coef[2], digits=2);#exp(beta)
-                  HR.confint.lower <- signif(x$conf.int[,"lower .95"],2)
-                  HR.confint.upper <- signif(x$conf.int[,"upper .95"],2)
+                   p.value<-signif(x$wald["pvalue"], digits=digits)
+                   wald.test<-signif(x$wald["test"], digits=digits)
+                   beta <- signif(x$coef[1], digits=digits);#coeficient beta
+                  HR <- signif(x$coef[2], digits=digits);#exp(beta)
+                  HR.confint.lower <- signif(x$conf.int[,"lower .95"],digits)
+                  HR.confint.upper <- signif(x$conf.int[,"upper .95"],digits)
                   # HR <- paste0(HR, " (",
                   #                       HR.confint.lower, "-", HR.confint.upper, ")")
                            res<-c(beta, HR, HR.confint.lower, HR.confint.upper,wald.test, p.value)

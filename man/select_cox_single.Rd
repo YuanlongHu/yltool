@@ -4,7 +4,7 @@
 \alias{select_cox_single}
 \title{select_cox_single}
 \usage{
-select_cox_single(expr, time, status)
+select_cox_single(expr, time, status, digits = 2)
 }
 \arguments{
 \item{expr}{a matrix of expression values where rows correspond to genes and columns correspond to samples.}
@@ -12,6 +12,8 @@ select_cox_single(expr, time, status)
 \item{time}{a vector.}
 
 \item{status}{status}
+
+\item{digits}{digits}
 }
 \value{
 a data.frame
