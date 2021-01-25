@@ -269,42 +269,60 @@ plotGroupBar <- function(pdata, x, fill){
 #' @export
 #' @author Yuanlong Hu
 
-plotExprPCA <- function(expr, feature, pdata,
-                        addEllipses=TRUE,
-                        ellipse.type="confidence",
-                        ellipse.level=0.95,
-                        ...){
+plotExprPCA <- function(expr, feature, pdata=NULL,
+                         addEllipses=TRUE,
+                         ellipse.type="confidence",
+                         ellipse.level=0.95,
+                         ...){
 
   expr <- expr[feature,]
   expr <- na.omit(expr)
   message(paste("** A total of",nrow(expr), "features. **"))
   expr <- as.data.frame(t(expr))
-  res_pca <- PCA(expr, graph = FALSE)
-  if(ellipse.type=="confidence"){
-    p <- fviz_pca_ind(res_pca,
-                      col.ind = factor(pdata),
-                      palette = "jco",
-                      addEllipses = addEllipses,
-                      label = "none",pointsize = 2.5,
-                      #col.var = "black",#alpha.ind = 0.5,
-                      alpha.var=0.7,ellipse.level=ellipse.level,
-                      #gradient.cols = "RdYlBu",col.var = "black",
-                      repel = F,title = "",legend.title = "Group",...) +
+  res_pca <- FactoMineR::PCA(expr, graph = FALSE)
+  if(is.null(pdata)){
+    p <- factoextra::fviz_pca_ind(res_pca,
+                                  col.ind = "blue",
+                                  #palette = "jco",
+                                  #addEllipses = addEllipses,
+                                  label = "none",pointsize = 2.5,
+                                  #col.var = "black",#alpha.ind = 0.5,
+                                  alpha.var=0.7,
+                                  #ellipse.level = ellipse.level,
+                                  #gradient.cols = "RdYlBu",col.var = "black",
+                                  repel = F,title = "",legend.title = "Group",...) +
       #theme(legend.position = "right")+
       theme_minimal()
   }else{
-    p <- fviz_pca_ind(res_pca,
-                   col.ind = factor(pdata),
-                   palette = "jco",
-                   addEllipses = addEllipses,
-                   label = "none",pointsize = 2.5,
-                   #col.var = "black",#alpha.ind = 0.5,
-                   alpha.var=0.7,ellipse.type=ellipse.type,
 
-                    #gradient.cols = "RdYlBu",col.var = "black",
-                    repel = F,title = "",legend.title = "Group",...) +
+
+
+    if(ellipse.type=="confidence"){
+      p <- factoextra::fviz_pca_ind(res_pca,
+                                    col.ind = factor(pdata),
+                                    palette = "jco",
+                                    addEllipses = addEllipses,
+                                    label = "none",pointsize = 2.5,
+                                    #col.var = "black",#alpha.ind = 0.5,
+                                    alpha.var=0.7,ellipse.level = ellipse.level,
+                                    #gradient.cols = "RdYlBu",col.var = "black",
+                                    repel = F,title = "",legend.title = "Group",...) +
         #theme(legend.position = "right")+
         theme_minimal()
+    }else{
+      p <- factoextra::fviz_pca_ind(res_pca,
+                                    col.ind = factor(pdata),
+                                    palette = "jco",
+                                    addEllipses = addEllipses,
+                                    label = "none",pointsize = 2.5,
+                                    #col.var = "black",#alpha.ind = 0.5,
+                                    alpha.var=0.7,ellipse.type=ellipse.type,
+                                    ellipse.level=ellipse.level,
+                                    #gradient.cols = "RdYlBu",col.var = "black",
+                                    repel = F,title = "",legend.title = "Group",...) +
+        #theme(legend.position = "right")+
+        theme_minimal()
+    }
   }
   return(p)
 }

@@ -7,7 +7,7 @@
 plotExprPCA(
   expr,
   feature,
-  pdata,
+  pdata = NULL,
   addEllipses = TRUE,
   ellipse.type = "confidence",
   ellipse.level = 0.95,
