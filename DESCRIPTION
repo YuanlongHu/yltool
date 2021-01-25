@@ -39,7 +39,9 @@ Imports:
     ggsci,
     ggpubr,
     FactoMineR,
-    factoextra
+    factoextra,
+    clusterProfiler,
+    ReactomePA
 Suggests: 
     knitr,
     rmarkdown
