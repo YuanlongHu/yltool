@@ -297,7 +297,7 @@ plotExprPCA <- function(expr, feature, pdata=NULL,
 
 
 
-    if(ellipse.type=="confidence"){
+    if(ellipse_type=="confidence"){
       p <- fviz_pca_ind(res_pca,
                                     col.ind = factor(pdata),
                                     palette = "jco",
