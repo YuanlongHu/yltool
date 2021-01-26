@@ -294,7 +294,7 @@ plotExprDIM <- function(expr, feature, pdata=NULL,
 
 
   if (method[1]=="PCA") {
-
+    message("** Run PCA **")
 
   res_pca <- PCA(expr, graph = FALSE)
   if(is.null(pdata)){
@@ -311,9 +311,6 @@ plotExprDIM <- function(expr, feature, pdata=NULL,
       #theme(legend.position = "right")+
       theme_minimal()
   }else{
-
-
-
     if(ellipse_type=="confidence"){
       p <- fviz_pca_ind(res_pca,
                                     col.ind = factor(pdata),
@@ -345,10 +342,11 @@ plotExprDIM <- function(expr, feature, pdata=NULL,
 
 
   if(method[1]=="tSNE"){
+    message("** Run t-SNE **")
     res_tsne <- Rtsne(expr,perplexity=tsne_perplexity)
     res_tsne <- data.frame(x = res_tsne$Y[,1], y = res_tsne$Y[,2], col = pdata)
     p <- ggplot(res_tsne,
-                aes(x=x, y=y, color=col, fill=color)) +
+                aes(x=x, y=y, color=col, fill=col)) +
       geom_point()+
       theme_minimal()+
       labs(x="Dim1",y="Dim2")+
