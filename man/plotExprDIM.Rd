@@ -8,7 +8,7 @@ plotExprDIM(
   expr,
   feature,
   pdata = NULL,
-  method = c("PCA", "tSNE"),
+  method,
   addEllipses = TRUE,
   ellipse_type = "confidence",
   ellipse_level = 0.95,

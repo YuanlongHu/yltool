@@ -280,12 +280,12 @@ plotGroupBar <- function(pdata, x, fill){
 #' @author Yuanlong Hu
 
 plotExprDIM <- function(expr, feature, pdata=NULL,
-                        method=c("PCA","tSNE"),
+                        method,
                         addEllipses=TRUE,
-                         ellipse_type="confidence",
-                         ellipse_level=0.95,
+                        ellipse_type="confidence",
+                        ellipse_level=0.95,
                         tsne_perplexity=30,
-                         ...){
+                        ...){
 
   expr <- expr[feature,]
   expr <- na.omit(expr)
@@ -341,7 +341,7 @@ plotExprDIM <- function(expr, feature, pdata=NULL,
   }
 
 
-  if(method[1]=="tSNE"){
+  if(method=="tSNE"){
     message("** Run t-SNE **")
     res_tsne <- Rtsne(expr,perplexity=tsne_perplexity)
     res_tsne <- data.frame(x = res_tsne$Y[,1], y = res_tsne$Y[,2], col = pdata)
