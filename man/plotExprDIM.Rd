@@ -13,6 +13,7 @@ plotExprDIM(
   ellipse_type = "confidence",
   ellipse_level = 0.95,
   tsne_perplexity = 30,
+  alpha = 0.7,
   ...
 )
 }
@@ -32,6 +33,8 @@ plotExprDIM(
 \item{ellipse_level}{0.95}
 
 \item{tsne_perplexity}{perplexity}
+
+\item{alpha}{0.7}
 
 \item{...}{other}
 }

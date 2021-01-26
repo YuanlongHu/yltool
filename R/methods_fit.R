@@ -263,6 +263,7 @@ plotGroupBar <- function(pdata, x, fill){
 #' @param ellipse_type "convex" or "confidence"
 #' @param ellipse_level 0.95
 #' @param tsne_perplexity perplexity
+#' @param alpha 0.7
 #' @param ... other
 #' @importFrom FactoMineR PCA
 #' @importFrom factoextra fviz_pca_ind
@@ -285,6 +286,7 @@ plotExprDIM <- function(expr, feature, pdata=NULL,
                         ellipse_type="confidence",
                         ellipse_level=0.95,
                         tsne_perplexity=30,
+                        alpha=0.7,
                         ...){
 
   expr <- expr[feature,]
@@ -299,15 +301,15 @@ plotExprDIM <- function(expr, feature, pdata=NULL,
   res_pca <- PCA(expr, graph = FALSE)
   if(is.null(pdata)){
     p <- fviz_pca_ind(res_pca,
-                                  col.ind = "blue",
-                                  #palette = "jco",
-                                  #addEllipses = addEllipses,
-                                  label = "none",pointsize = 2.5,
-                                  #col.var = "black",#alpha.ind = 0.5,
-                                  alpha.var=0.7,
+                      col.ind = "blue",
+                      #palette = "jco",
+                      #addEllipses = addEllipses,
+                      label = "none",pointsize = 2.5,
+                       #col.var = "black",#alpha.ind = 0.5,
+                      alpha.var=alpha,
                                   #ellipse.level = ellipse.level,
                                   #gradient.cols = "RdYlBu",col.var = "black",
-                                  repel = F,title = "",legend.title = "Group",...) +
+                       repel = F, title = "", legend.title = "Group",...) +
       #theme(legend.position = "right")+
       theme_minimal()
   }else{
@@ -318,7 +320,7 @@ plotExprDIM <- function(expr, feature, pdata=NULL,
                                     addEllipses = addEllipses,
                                     label = "none",pointsize = 2.5,
                                     #col.var = "black",#alpha.ind = 0.5,
-                                    alpha.var=0.7,ellipse.level = ellipse_level,
+                                    alpha.var=alpha,ellipse.level = ellipse_level,
                                     #gradient.cols = "RdYlBu",col.var = "black",
                                     repel = F,title = "",legend.title = "Group",...) +
         #theme(legend.position = "right")+
@@ -330,7 +332,7 @@ plotExprDIM <- function(expr, feature, pdata=NULL,
                                     addEllipses = addEllipses,
                                     label = "none",pointsize = 2.5,
                                     #col.var = "black",#alpha.ind = 0.5,
-                                    alpha.var=0.7,ellipse.type=ellipse_type,
+                                    alpha.var=alpha,ellipse.type=ellipse_type,
                                     ellipse.level=ellipse_level,
                                     #gradient.cols = "RdYlBu",col.var = "black",
                                     repel = F,title = "",legend.title = "Group",...) +
@@ -344,17 +346,22 @@ plotExprDIM <- function(expr, feature, pdata=NULL,
   if(method=="tSNE"){
     message("** Run t-SNE **")
     res_tsne <- Rtsne(expr,perplexity=tsne_perplexity)
-    res_tsne <- data.frame(x = res_tsne$Y[,1], y = res_tsne$Y[,2], col = pdata)
+    res_tsne <- data.frame(x = res_tsne$Y[,1],
+                           y = res_tsne$Y[,2],
+                           col = pdata)
     p <- ggplot(res_tsne,
-                aes(x=x, y=y, color=col, fill=col)) +
+                aes(x=x, y=y, color=col)) +
       geom_point()+
       theme_minimal()+
-      labs(x="Dim1",y="Dim2")+
-      scale_fill_jco()+
-      scale_color_jco()
+      labs(x="Dim1",y="Dim2")
+
 
     if(addEllipses){
-      p <- p+stat_ellipse(level = ellipse_level,alpha=0.8)
+      p <- p+
+        stat_ellipse(aes(fill = col), geom = "polygon",
+                     alpha = alpha, level = ellipse_level)+
+        scale_fill_jco()+
+        scale_color_jco()
     }
   }
 
