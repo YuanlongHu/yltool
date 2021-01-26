@@ -259,7 +259,7 @@ plotGroupBar <- function(pdata, x, fill){
 #' @param feature feature
 #' @param pdata a vector.
 #' @param addEllipses TRUE or FALSE
-#' @param ellipse_type "convex"，"confidence"
+#' @param ellipse_type "convex" or "confidence"
 #' @param ellipse_level 0.95
 #' @param ... other
 #' @importFrom FactoMineR PCA

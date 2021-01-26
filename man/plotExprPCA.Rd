@@ -23,7 +23,7 @@ plotExprPCA(
 
 \item{addEllipses}{TRUE or FALSE}
 
-\item{ellipse_type}{"convex"，"confidence"}
+\item{ellipse_type}{"convex" or "confidence"}
 
 \item{ellipse_level}{0.95}
 
