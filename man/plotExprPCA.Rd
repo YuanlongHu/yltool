@@ -9,8 +9,8 @@ plotExprPCA(
   feature,
   pdata = NULL,
   addEllipses = TRUE,
-  ellipse.type = "confidence",
-  ellipse.level = 0.95,
+  ellipse_type = "confidence",
+  ellipse_level = 0.95,
   ...
 )
 }
@@ -23,9 +23,9 @@ plotExprPCA(
 
 \item{addEllipses}{TRUE or FALSE}
 
-\item{ellipse.type}{"convex"，"confidence"}
+\item{ellipse_type}{"convex"，"confidence"}
 
-\item{ellipse.level}{0.95}
+\item{ellipse_level}{0.95}
 
 \item{...}{other}
 }
