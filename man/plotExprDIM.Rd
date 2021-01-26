@@ -8,7 +8,7 @@ plotExprDIM(
   expr,
   feature,
   pdata = NULL,
-  methed = c("PCA", "tSNE"),
+  method = c("PCA", "tSNE"),
   addEllipses = TRUE,
   ellipse_type = "confidence",
   ellipse_level = 0.95,
@@ -23,7 +23,7 @@ plotExprDIM(
 
 \item{pdata}{a vector.}
 
-\item{methed}{"PCA" or "tSNE"}
+\item{method}{"PCA" or "tSNE"}
 
 \item{addEllipses}{TRUE or FALSE}
 

@@ -258,7 +258,7 @@ plotGroupBar <- function(pdata, x, fill){
 #' @param expr expr
 #' @param feature feature
 #' @param pdata a vector.
-#' @param methed "PCA" or "tSNE"
+#' @param method "PCA" or "tSNE"
 #' @param addEllipses TRUE or FALSE
 #' @param ellipse_type "convex" or "confidence"
 #' @param ellipse_level 0.95
@@ -280,7 +280,7 @@ plotGroupBar <- function(pdata, x, fill){
 #' @author Yuanlong Hu
 
 plotExprDIM <- function(expr, feature, pdata=NULL,
-                        methed=c("PCA","tSNE"),
+                        method=c("PCA","tSNE"),
                         addEllipses=TRUE,
                          ellipse_type="confidence",
                          ellipse_level=0.95,
