@@ -258,19 +258,29 @@ plotGroupBar <- function(pdata, x, fill){
 #' @param expr expr
 #' @param feature feature
 #' @param pdata a vector.
+#' @param methed "PCA" or "tSNE"
 #' @param addEllipses TRUE or FALSE
 #' @param ellipse_type "convex" or "confidence"
 #' @param ellipse_level 0.95
 #' @param ... other
 #' @importFrom FactoMineR PCA
 #' @importFrom factoextra fviz_pca_ind
+#' @importFrom Rtsne Rtsne
+#' @importFrom ggplot2 ggplot
+#' @importFrom ggplot2 abs
+#' @importFrom ggplot2 geom_point
+#' @importFrom ggplot2 stat_ellipse
+#' @importFrom ggplot2 labs
+#' @importFrom ggsci scale_color_jco
+#' @importFrom ggsci scale_fill_jco
 #' @importFrom ggplot2 theme_minimal
 #' @return a ggplot2 object
 #' @export
 #' @author Yuanlong Hu
 
 plotExprPCA <- function(expr, feature, pdata=NULL,
-                         addEllipses=TRUE,
+                        methed=c("PCA","tSNE"),
+                        addEllipses=TRUE,
                          ellipse_type="confidence",
                          ellipse_level=0.95,
                          ...){
@@ -279,6 +289,11 @@ plotExprPCA <- function(expr, feature, pdata=NULL,
   expr <- na.omit(expr)
   message(paste("** A total of",nrow(expr), "features. **"))
   expr <- as.data.frame(t(expr))
+
+
+  if (method[1]=="PCA") {
+
+
   res_pca <- PCA(expr, graph = FALSE)
   if(is.null(pdata)){
     p <- fviz_pca_ind(res_pca,
@@ -324,5 +339,24 @@ plotExprPCA <- function(expr, feature, pdata=NULL,
         theme_minimal()
     }
   }
+  }
+
+
+  if(method[1]=="tSNE"){
+    res_tsne <- Rtsne(expr,perplexity=tsne_perplexity)
+    res_tsne <- data.frame(x = res_tsne$Y[,1], y = res_tsne$Y[,2], col = pdata)
+    p <- ggplot(res_tsne,
+                aes(x=x, y=y, color=col, fill=color)) +
+      geom_point()+
+      theme_minimal()+
+      labs(x="Dim1",y="Dim2")+
+      scale_fill_jco()+
+      scale_color_jco()
+
+    if(addEllipses){
+      p <- p+stat_ellipse(level = ellipse_level,alpha=0.8)
+    }
+  }
+
   return(p)
 }

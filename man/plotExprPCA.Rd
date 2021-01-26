@@ -8,6 +8,7 @@ plotExprPCA(
   expr,
   feature,
   pdata = NULL,
+  methed = c("PCA", "tSNE"),
   addEllipses = TRUE,
   ellipse_type = "confidence",
   ellipse_level = 0.95,
@@ -20,6 +21,8 @@ plotExprPCA(
 \item{feature}{feature}
 
 \item{pdata}{a vector.}
+
+\item{methed}{"PCA" or "tSNE"}
 
 \item{addEllipses}{TRUE or FALSE}
 
