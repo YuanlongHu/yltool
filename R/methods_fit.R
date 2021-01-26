@@ -251,10 +251,10 @@ plotGroupBar <- function(pdata, x, fill){
     scale_fill_jco()
 }
 
-#' plot PCA
+#' plot PCA and t-sne
 #'
 #'
-#' @title plotExprPCA
+#' @title plotExprDIM
 #' @param expr expr
 #' @param feature feature
 #' @param pdata a vector.
@@ -262,12 +262,13 @@ plotGroupBar <- function(pdata, x, fill){
 #' @param addEllipses TRUE or FALSE
 #' @param ellipse_type "convex" or "confidence"
 #' @param ellipse_level 0.95
+#' @param tsne_perplexity perplexity
 #' @param ... other
 #' @importFrom FactoMineR PCA
 #' @importFrom factoextra fviz_pca_ind
 #' @importFrom Rtsne Rtsne
 #' @importFrom ggplot2 ggplot
-#' @importFrom ggplot2 abs
+#' @importFrom ggplot2 aes
 #' @importFrom ggplot2 geom_point
 #' @importFrom ggplot2 stat_ellipse
 #' @importFrom ggplot2 labs
@@ -278,11 +279,12 @@ plotGroupBar <- function(pdata, x, fill){
 #' @export
 #' @author Yuanlong Hu
 
-plotExprPCA <- function(expr, feature, pdata=NULL,
+plotExprDIM <- function(expr, feature, pdata=NULL,
                         methed=c("PCA","tSNE"),
                         addEllipses=TRUE,
                          ellipse_type="confidence",
                          ellipse_level=0.95,
+                        tsne_perplexity=30,
                          ...){
 
   expr <- expr[feature,]
