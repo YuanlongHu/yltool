@@ -33,6 +33,51 @@ select_lm_single <- function(expr, pdata){
   return(res_list)
 }
 
+
+#' Fit single logistic methods
+#'
+#'
+#' @title select_logistic_single
+#' @param expr a matrix of expression values where rows correspond to genes and columns correspond to samples.
+#' @param feature feature
+#' @param pdata a vector.
+#' @importFrom pbapply pblapply
+#' @importFrom ROCR prediction
+#' @importFrom ROCR performance
+#' @return a data.frame
+#' @export
+#' @author Yuanlong Hu
+
+select_logistic_single <- function(expr, feature=NULL, pdata){
+  if(is.null(feature)){
+    feature <- rownames(expr)
+  }
+  expr <- as.data.frame(t(expr[feature,]))
+  expr$pdata <- as.factor(pdata)
+  formula <- paste0("pdata~",feature)
+  formula <- as.list(formula)
+  res <- pblapply(formula, function(x){
+    fit <- suppressMessages(glm(as.formula(x), data = expr, family = binomial()))
+    auc <- predict(fit, type = "response")
+    auc <- ROCR::prediction(auc, expr$pdata)
+    auc <- ROCR::performance(auc, "auc")@y.values[[1]]
+    CI <- confint(fit)
+    fit <- as.data.frame(summary(fit)$coefficients)
+    res <- c(exp(fit[2,1]),fit[2,4],exp(CI[2,1]), exp(CI[2,2]),auc)
+    names(res) <- c("OR","pvalue","CI_lower","CI_upper","AUC")
+    res <- signif(res,2)
+
+    return(res)
+  })
+  names(res) <- feature
+
+  res <- as.data.frame(t(as.data.frame(res)))
+  return(res)
+
+}
+
+
+
 #' Fit single cox methods
 #'
 #'
