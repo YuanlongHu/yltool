@@ -5,17 +5,40 @@
 #' @param res res
 #' @param pvalueCutoff p-value cutoff
 #' @param kegg_internal_data Use kegg internal data
+#' @param GMTset gmt file
+#' @param useGMTset use geneset from gmt file
 #' @importFrom clusterProfiler bitr
 #' @importFrom clusterProfiler gseKEGG
 #' @importFrom clusterProfiler gseGO
 #' @importFrom ReactomePA gsePathway
 #' @importFrom clusterProfiler setReadable
-#' @return a ggplot2 object
+#' @importFrom clusterProfiler GSEA
+#' @importFrom immcp read_gmt
+#' @return a gseaResult object
 #' @export
 #' @author Yuanlong Hu
 
-enrich_gsea <- function(res, pvalueCutoff=0.05, kegg_internal_data=FALSE){
+enrich_gsea <- function(res, pvalueCutoff=0.05, kegg_internal_data=FALSE,
+                        GMTset=NULL,
+                        useGMTset=FALSE){
+  if(useGMTset){
 
+    message("** Build Genelist **")
+    genelist <- res$logFC
+    names(genelist) <- rownames(res)
+    genelist <- sort(genelist, decreasing = T)
+
+    message("** Read GMT file **")
+    gmt <- immcp::read_gmt(GMTset)
+
+    message("** Run GSEA **")
+    res <- clusterProfiler::GSEA(
+      geneList=genelist,
+      pvalueCutoff=0.05,
+      minGSSize = 5,maxGSSize = 500,
+      TERM2GENE=gmt)
+
+  }else{
 
   message("** Biological Id translation **")
   res$SYMBOL <- rownames(res)
@@ -58,5 +81,6 @@ enrich_gsea <- function(res, pvalueCutoff=0.05, kegg_internal_data=FALSE){
   res <- list(kegg=kegg,
               ego_BP=ego_BP,
               Reactome=Reactome)
+  }
   return(res)
 }

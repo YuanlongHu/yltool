@@ -87,6 +87,7 @@ select_logistic_single <- function(expr, feature=NULL, pdata){
 #' @param status status
 #' @param digits digits
 #' @importFrom pbapply pblapply
+#' @importFrom survival coxph
 #' @return a data.frame
 #' @export
 #' @author Yuanlong Hu
@@ -279,6 +280,7 @@ plotExprVolcano <- function(res, selectlabels=NULL,logFCcutoff=1,
 #' @importFrom ggplot2 theme
 #' @importFrom ggplot2 theme_minimal
 #' @importFrom ggplot2 scale_color_manual
+#' @importFrom ggplot2 position_fill
 #' @importFrom ggsci scale_fill_jco
 #' @return a ggplot2 object
 #' @export

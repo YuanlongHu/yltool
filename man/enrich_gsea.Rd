@@ -4,7 +4,13 @@
 \alias{enrich_gsea}
 \title{enrich_gsea}
 \usage{
-enrich_gsea(res, pvalueCutoff = 0.05, kegg_internal_data = FALSE)
+enrich_gsea(
+  res,
+  pvalueCutoff = 0.05,
+  kegg_internal_data = FALSE,
+  GMTset = NULL,
+  useGMTset = FALSE
+)
 }
 \arguments{
 \item{res}{res}
@@ -12,9 +18,13 @@ enrich_gsea(res, pvalueCutoff = 0.05, kegg_internal_data = FALSE)
 \item{pvalueCutoff}{p-value cutoff}
 
 \item{kegg_internal_data}{Use kegg internal data}
+
+\item{GMTset}{gmt file}
+
+\item{useGMTset}{use geneset from gmt file}
 }
 \value{
-a ggplot2 object
+a gseaResult object
 }
 \description{
 gsea
