@@ -95,7 +95,7 @@ enrich_gsea <- function(res, pvalueCutoff=0.05, kegg_internal_data=FALSE,
 
   message("** Summary Result **")
   res <- list(kegg=kegg,
-              go_BP=ego_CC,
+              go_CC=ego_CC,
               go_MF=ego_MF,
               go_BP=ego_BP,
               Reactome=Reactome)
