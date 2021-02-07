@@ -63,6 +63,20 @@ enrich_gsea <- function(res, pvalueCutoff=0.05, kegg_internal_data=FALSE,
                                    minGSSize=5,maxGSSize = 500,
                                    pvalueCutoff = pvalueCutoff,
                                    verbose= FALSE)
+  message("** GO-CC GSEA **")
+  ego_CC <- clusterProfiler::gseGO(geneList= genelist,
+                                   OrgDb=org.Hs.eg.db,
+                                   ont= "CC",nPerm=10000,
+                                   minGSSize=5,maxGSSize = 500,
+                                   pvalueCutoff = pvalueCutoff,
+                                   verbose= FALSE)
+  message("** GO-MF GSEA **")
+  ego_MF <- clusterProfiler::gseGO(geneList= genelist,
+                                   OrgDb=org.Hs.eg.db,
+                                   ont= "MF",nPerm=10000,
+                                   minGSSize=5,maxGSSize = 500,
+                                   pvalueCutoff = pvalueCutoff,
+                                   verbose= FALSE)
   message("** Reactome GSEA **")
   Reactome <- ReactomePA::gsePathway(geneList=genelist, organism="human",
                                      exponent= 1, nPerm=10000,
@@ -75,11 +89,15 @@ enrich_gsea <- function(res, pvalueCutoff=0.05, kegg_internal_data=FALSE,
   message("** Biological Id translation2 **")
   kegg <- clusterProfiler::setReadable(kegg, OrgDb = org.Hs.eg.db, keyType="ENTREZID")
   ego_BP <- clusterProfiler::setReadable(ego_BP, OrgDb = org.Hs.eg.db, keyType="ENTREZID")
+  ego_CC <- clusterProfiler::setReadable(ego_CC, OrgDb = org.Hs.eg.db, keyType="ENTREZID")
+  ego_MF <- clusterProfiler::setReadable(ego_MF, OrgDb = org.Hs.eg.db, keyType="ENTREZID")
   Reactome <- clusterProfiler::setReadable(Reactome, OrgDb = org.Hs.eg.db, keyType="ENTREZID")
 
   message("** Summary Result **")
   res <- list(kegg=kegg,
-              ego_BP=ego_BP,
+              go_BP=ego_CC,
+              go_MF=ego_MF,
+              go_BP=ego_BP,
               Reactome=Reactome)
   }
   return(res)
