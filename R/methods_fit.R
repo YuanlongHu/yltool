@@ -162,16 +162,17 @@ select_Boruta <- function(expr, pdata){
 plotBorutaImpHistory <- function(res,
                                  select = NULL,
                                  select2 = c("Confirmed", "Rejected", "Tentative")){
+
+   ImpHistory <- as.data.frame(t(res$ImpHistory))
+  ImpHistory$Group <- res$finalDecision[rownames(ImpHistory)]
+  ImpHistory$gene <- gsub("`","",rownames(ImpHistory))
+
   if (is.null(select)) {
     select <- names(res$finalDecision)
   }
 
-  ImpHistory <- res$ImpHistory[,select]
-  ImpHistory <- as.data.frame(t(ImpHistory))
-  ImpHistory$Group <- res$finalDecision[select]
-  ImpHistory$gene <- rownames(ImpHistory)
   ImpHistory <- reshape2::melt(ImpHistory, id.vars=c("gene","Group"))
-  ImpHistory <- ImpHistory[ImpHistory$Group %in% select2,]
+  ImpHistory <- ImpHistory[ ImpHistory$gene %in% select & ImpHistory$Group %in% select2,]
   ImpHistory$gene <- with(ImpHistory, reorder(gene, value, median))
 
   p <- ggplot(ImpHistory, aes(x=value, y=gene, fill=Group))+
