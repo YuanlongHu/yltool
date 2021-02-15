@@ -235,6 +235,7 @@ plotExprBox <- function(expr, select, pdata, comparisons=list(c("C1","C2"))){
 #' @importFrom ggplot2 geom_vline
 #' @importFrom ggplot2 theme
 #' @importFrom ggplot2 labs
+#' @importFrom ggplot2 unit
 #' @importFrom ggplot2 theme_minimal
 #' @importFrom ggplot2 scale_color_manual
 #' @importFrom ggrepel geom_text_repel
@@ -417,6 +418,59 @@ plotExprDIM <- function(expr, feature, pdata=NULL,
         scale_color_jco()
     }
   }
+
+  return(p)
+}
+
+#' plot geneset heatmap
+#'
+#'
+#' @title plotExprGenesetHeatmap
+#' @param res result
+#' @param select selected geneset name
+#' @param genesetlist a geneset list
+#' @param logFCCutoff abs logFC cutoff
+#' @param pvalueCutoff p-value cutoff
+#' @param adjpvalueCutoff adjusted p-value cutoff
+#' @importFrom ggplot2 ggplot
+#' @importFrom ggplot2 aes
+#' @importFrom ggplot2 geom_tile
+#' @importFrom ggplot2 scale_fill_gradient2
+#' @importFrom scales muted
+#' @importFrom ggplot2 element_text
+#' @importFrom ggsci theme_minimal
+#' @importFrom ggsci scale_fill_jco
+#' @importFrom ggplot2 theme_minimal
+#' @return a ggplot2 object
+#' @export
+#' @author Yuanlong Hu
+
+plotExprGenesetHeatmap <- function(res, select, genesetlist,
+                                   logFCCutoff=0.2,
+                                   pvalueCutoff=0.05,adjpvalueCutoff=0.05){
+  res$Gene <- rownames(res)
+  select <- as.list(select)
+  genesetlist <- lapply(select, function(x){
+    data.frame(Geneset=rep(x,length(genesetlist[[x]])),
+               Gene=Geneset[[x]])
+  })
+
+  genesetlist <- Reduce(rbind, genesetlist)
+  genesetlist <- merge(genesetlist,res[,c("logFC","P.Value","adj.P.Val","SYMBOL")],
+                     by = "Gene")
+
+  genesetlist <- genesetlist[abs(genesetlist$logFC)>= logFCCutoff,]
+  genesetlist <- genesetlist[genesetlist$P.Value<pvalueCutoff,]
+  genesetlist <- genesetlist[genesetlist$adj.P.Val<adjpvalueCutoff,]
+
+  genesetlist$Gene <- with(genesetlist, reorder(Gene, logFC,mean))
+  genesetlist$Geneset <- with(genesetlist, reorder(Geneset, Gene,length))
+
+  p <- ggplot(genesetlist,aes(x=Gene,y=Geneset))+
+    geom_tile(aes(fill=logFC))+
+    scale_fill_gradient2(low = muted("blue"), high = muted("red"))+
+    theme_minimal()+
+    theme(axis.text.x = element_text(angle=45,hjust=1, vjust=1))
 
   return(p)
 }
