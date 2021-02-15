@@ -88,6 +88,7 @@ select_logistic_single <- function(expr, feature=NULL, pdata){
 #' @param digits digits
 #' @importFrom pbapply pblapply
 #' @importFrom survival coxph
+#' @importFrom survival Surv
 #' @return a data.frame
 #' @export
 #' @author Yuanlong Hu
@@ -138,6 +139,9 @@ select_cox_single <- function(expr, time, status, digits=2){
 
 select_Boruta <- function(expr, pdata){
   expr <- as.data.frame(t(expr))
+  if (as.character(pdata)) {
+    pdata <- as.factor(pdata)
+  }
   expr$pdata <- pdata
   res <- Boruta::Boruta(pdata~., expr, doTrace=1)
   return(res)
@@ -224,6 +228,7 @@ plotExprBox <- function(expr, select, pdata, comparisons=list(c("C1","C2"))){
 #' @param ylab a charact
 #' @importFrom ggplot2 ggplot
 #' @importFrom ggplot2 aes
+#' @importFrom ggplot2 aes_
 #' @importFrom ggplot2 geom_point
 #' @importFrom ggplot2 geom_hline
 #' @importFrom ggplot2 geom_vline
