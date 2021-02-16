@@ -455,7 +455,7 @@ plotExprGenesetHeatmap <- function(res, select, selectgene=NULL,genesetlist,
   })
 
   genesetlist <- Reduce(rbind, genesetlist)
-  genesetlist <- merge(genesetlist,res[,c("logFC","P.Value","adj.P.Val","SYMBOL")],
+  genesetlist <- merge(genesetlist,res[,c("logFC","P.Value","adj.P.Val","Gene")],
                      by = "Gene")
 
   genesetlist <- genesetlist[abs(genesetlist$logFC)>= logFCCutoff,]
