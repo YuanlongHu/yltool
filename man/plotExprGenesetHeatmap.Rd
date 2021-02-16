@@ -7,6 +7,7 @@
 plotExprGenesetHeatmap(
   res,
   select,
+  selectgene = NULL,
   genesetlist,
   logFCCutoff = 0.2,
   pvalueCutoff = 0.05,

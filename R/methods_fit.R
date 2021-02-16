@@ -437,15 +437,14 @@ plotExprDIM <- function(expr, feature, pdata=NULL,
 #' @importFrom ggplot2 geom_tile
 #' @importFrom ggplot2 scale_fill_gradient2
 #' @importFrom scales muted
+#' @importFrom ggplot2 theme
 #' @importFrom ggplot2 element_text
-#' @importFrom ggsci theme_minimal
-#' @importFrom ggsci scale_fill_jco
 #' @importFrom ggplot2 theme_minimal
 #' @return a ggplot2 object
 #' @export
 #' @author Yuanlong Hu
 
-plotExprGenesetHeatmap <- function(res, select, genesetlist,
+plotExprGenesetHeatmap <- function(res, select, selectgene=NULL,genesetlist,
                                    logFCCutoff=0.2,
                                    pvalueCutoff=0.05,adjpvalueCutoff=0.05){
   res$Gene <- rownames(res)
@@ -462,6 +461,10 @@ plotExprGenesetHeatmap <- function(res, select, genesetlist,
   genesetlist <- genesetlist[abs(genesetlist$logFC)>= logFCCutoff,]
   genesetlist <- genesetlist[genesetlist$P.Value<pvalueCutoff,]
   genesetlist <- genesetlist[genesetlist$adj.P.Val<adjpvalueCutoff,]
+
+  if(!is.null(selectgene)){
+    genesetlist <- genesetlist[genesetlist$Gene %in% selectgene,]
+  }
 
   genesetlist$Gene <- with(genesetlist, reorder(Gene, logFC,mean))
   genesetlist$Geneset <- with(genesetlist, reorder(Geneset, Gene,length))
