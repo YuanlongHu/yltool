@@ -451,7 +451,7 @@ plotExprGenesetHeatmap <- function(res, select, selectgene=NULL,genesetlist,
   select <- as.list(select)
   genesetlist <- lapply(select, function(x){
     data.frame(Geneset=rep(x,length(genesetlist[[x]])),
-               Gene=Geneset[[x]])
+               Gene=genesetlist[[x]])
   })
 
   genesetlist <- Reduce(rbind, genesetlist)

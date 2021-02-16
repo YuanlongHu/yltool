@@ -1,6 +1,6 @@
 Package: yltool
 Title: The Research Tool Used By Yuanlong Hu.
-Version: 0.3.26
+Version: 0.3.27
 Authors@R: 
     person(given = "Yuanlong",
            family = "Hu",
