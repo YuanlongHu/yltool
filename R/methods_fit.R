@@ -176,8 +176,7 @@ plotBorutaImpHistory <- function(res,
     ImpHistory <- ImpHistory[ImpHistory$gene %in% select & ImpHistory$Group %in% select2,]
   }
 
-
-  ImpHistory$gene <- gsub("."," ",ImpHistory$gene)
+  #ImpHistory$gene <- gsub("."," ",ImpHistory$gene)
   ImpHistory$gene <- with(ImpHistory, reorder(gene, value, median))
 
   p <- ggplot(ImpHistory, aes(x=value, y=gene, fill=Group))+
