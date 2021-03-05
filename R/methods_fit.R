@@ -155,6 +155,13 @@ select_Boruta <- function(expr, pdata){
 #' @param res the result of Boruta
 #' @param select a vector.
 #' @importFrom Boruta Boruta
+#' @importFrom ggplot2 ggplot
+#' @importFrom ggplot2 geom_boxplot
+#' @importFrom ggplot2 theme_minimal
+#' @importFrom ggplot2 aes
+#' @importFrom ggplot2 labs
+#' @importFrom ggplot2 theme
+#' @importFrom ggplot2 scale_fill_manual
 #' @return a Boruta object
 #' @export
 #' @author Yuanlong Hu
@@ -181,10 +188,12 @@ plotBorutaImpHistory <- function(res,
 
   p <- ggplot(ImpHistory, aes(x=value, y=gene, fill=Group))+
     geom_boxplot()+
-    scale_fill_jco()+
     theme_minimal()+
     labs(x="Importance",y="Attributes",fill="")+
-    theme(legend.justification=c(1,0), legend.position=c(1,0))
+    theme(legend.justification=c(1,0), legend.position=c(1,0))+
+    scale_fill_manual(values = c("Confirmed"=="#EFC000FF",
+                                 "Tentative"="#0073C2FF",
+                                 "Rejected"="#868686FF"))
   return(p)
 }
 
