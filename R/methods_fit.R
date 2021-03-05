@@ -139,7 +139,7 @@ select_cox_single <- function(expr, time, status, digits=2){
 
 select_Boruta <- function(expr, pdata){
   expr <- as.data.frame(t(expr))
-  if (as.character(pdata)) {
+  if (is.character(pdata)) {
     pdata <- as.factor(pdata)
   }
   expr$pdata <- pdata
