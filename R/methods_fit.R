@@ -277,6 +277,7 @@ plotExprVolcano <- function(res, selectlabels=NULL,logFCcutoff=1,
                                 "none"="#868686FF",
                                 "up"="#EFC000FF"))+
     geom_text_repel(aes(label=labels),size = 2.25,
+                    color="black",
                     segment.color = "black",
                     box.padding = unit(0.5, "lines"),
                     point.padding = unit(0.1, "lines"))
