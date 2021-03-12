@@ -4,12 +4,16 @@
 \alias{select_Boruta}
 \title{select_Boruta}
 \usage{
-select_Boruta(expr, pdata)
+select_Boruta(expr, pdata, pValue = 0.01, maxRuns = 100)
 }
 \arguments{
 \item{expr}{a matrix of expression values where rows correspond to genes and columns correspond to samples.}
 
 \item{pdata}{a vector.}
+
+\item{pValue}{confidence level}
+
+\item{maxRuns}{maximal number of importance source runs.}
 }
 \value{
 a Boruta object

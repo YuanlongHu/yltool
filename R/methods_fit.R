@@ -132,18 +132,20 @@ select_cox_single <- function(expr, time, status, digits=2){
 #' @title select_Boruta
 #' @param expr a matrix of expression values where rows correspond to genes and columns correspond to samples.
 #' @param pdata a vector.
+#' @param pValue confidence level
+#' @param maxRuns maximal number of importance source runs.
 #' @importFrom Boruta Boruta
 #' @return a Boruta object
 #' @export
 #' @author Yuanlong Hu
 
-select_Boruta <- function(expr, pdata){
+select_Boruta <- function(expr, pdata, pValue=0.01, maxRuns=100){
   expr <- as.data.frame(t(expr))
   if (is.character(pdata)) {
     pdata <- as.factor(pdata)
   }
   expr$pdata <- pdata
-  res <- Boruta::Boruta(pdata~., expr, doTrace=1)
+  res <- Boruta::Boruta(pdata~., expr, doTrace=1, pValue = pValue, maxRuns = maxRuns)
   return(res)
 }
 
