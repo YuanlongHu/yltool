@@ -145,7 +145,8 @@ select_Boruta <- function(expr, pdata, pValue=0.01, maxRuns=100){
     pdata <- as.factor(pdata)
   }
   expr$pdata <- pdata
-  res <- Boruta::Boruta(pdata~., expr, doTrace=1, pValue = pValue, maxRuns = maxRuns)
+  res <- Boruta::Boruta(pdata~., expr, doTrace=1,
+                        pValue = pValue, maxRuns = maxRuns)
   return(res)
 }
 

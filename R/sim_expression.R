@@ -90,18 +90,22 @@ sim_expr <- function(data, gene, method=c("pearson","spearman","MIC"), MIC_pvalu
 #' @title convCorrMatrix
 #' @param mat CorrMatrix
 #' @param pmat p-value matrix
+#' @param pvalueCutoff p-value cutoff
+#' @param corCutoff cor cutoff
 #' @return a data.frame
 #' @author Yuanlong Hu
 #' @noRd
 
-convCorrMatrix <- function(mat, pmat) {
+convCorrMatrix <- function(mat, pmat, pvalueCutoff=0.05, corCutoff=0.5) {
   ut <- upper.tri(mat)
-  data.frame(
+  mat <- data.frame(
     row = rownames(mat)[row(mat)[ut]],
-    column = rownames(mat)[col(mat)[ut]],
+    column = rownames(mat)[base::col(mat)[ut]],
     cor  =(mat)[ut],
     p = pmat[ut]
   )
+  mat <- mat[mat$p<pvalueCutoff & abs(mat$cor)>=corCutoff,]
+  return(mat)
 }
 
 
