@@ -220,7 +220,9 @@ plotBorutaImpHistory <- function(res,
 #' @export
 #' @author Yuanlong Hu
 
-plotExprBox <- function(expr, select, pdata, comparisons=list(c("C1","C2"))){
+plotExprBox <- function(expr, select, pdata,
+                        comparisons=list(c("C1","C2")),
+                        label=c("p.signif","p.format")){
 
   expr <- data.frame(object=as.numeric(expr[select,]),
                      group=pdata)
@@ -228,11 +230,57 @@ plotExprBox <- function(expr, select, pdata, comparisons=list(c("C1","C2"))){
     geom_violin()+
     geom_boxplot(width=0.2, fill="white")+
     scale_fill_jco()+
-    stat_compare_means(comparisons = comparisons)+
+    stat_compare_means(label=label[1], comparisons = comparisons)+
     theme_minimal()
   return(p)
 
 }
+
+#' plot ExprBox2
+#'
+#'
+#' @title plotExprBox2
+#' @param expr the expr data
+#' @param select a vector.
+#' @param pdata pdata
+#' @param comparisons a list
+#' @param label "p.signif","p.format"
+#' @param ncol the number of col
+#' @param nrow the number of now
+#' @importFrom reshape2 melt
+#' @importFrom ggplot2 ggplot
+#' @importFrom ggplot2 aes
+#' @importFrom ggplot2 geom_violin
+#' @importFrom ggplot2 geom_boxplot
+#' @importFrom ggplot2 theme_minimal
+#' @importFrom ggsci scale_fill_jco
+#' @importFrom ggplot2 facet_wrap
+#' @importFrom ggpubr stat_compare_means
+#' @return a ggplot2 object
+#' @export
+#' @author Yuanlong Hu
+plotExprBox2 <- function(expr, select, pdata,
+                         comparisons = list(c("S1", "S2")),
+                         label=c("p.signif","p.format"),
+                         ncol=2, nrow = 2
+){
+  select <- intersect(rownames(expr),select)
+  expr <- expr[select,]
+  expr <- as.data.frame(t(expr))
+  expr$group <- pdata
+
+  expr <- reshape2::melt(expr, id.vars="group")
+
+  p <- ggplot(expr, aes(x=group, y=value, fill=group))+
+    geom_violin()+
+    geom_boxplot(width=0.2, fill="white")+
+    scale_fill_jco()+
+    stat_compare_means(label=label[1], comparisons = comparisons)+
+    theme_minimal()+
+    facet_wrap(variable~.,scales = "free", ncol=ncol, nrow=nrow)
+  return(p)
+}
+
 
 #' plot ExprVolcano
 #'
