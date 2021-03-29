@@ -231,7 +231,8 @@ plotExprBox <- function(expr, select, pdata,
     geom_boxplot(width=0.2, fill="white")+
     scale_fill_jco()+
     stat_compare_means(label=label[1], comparisons = comparisons)+
-    theme_minimal()
+    theme_minimal()+
+    labs(y=select, x="")
   return(p)
 
 }
