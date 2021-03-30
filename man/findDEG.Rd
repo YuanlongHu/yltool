@@ -4,14 +4,14 @@
 \alias{findDEG}
 \title{findDEG}
 \usage{
-findDEG(data, pdata, contrasts)
+findDEG(data, pdata, contrasts, rnaseq = F)
 }
 \arguments{
 \item{data}{A matrix of expression values where rows correspond to genes and columns correspond to samples.}
 
 \item{pdata}{A character vector of phenotype.}
 
-\item{contrasts}{character vector specifying contrasts}
+\item{contrasts}{list of specifying contrasts}
 }
 \value{
 A list

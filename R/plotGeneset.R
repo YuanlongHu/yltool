@@ -145,7 +145,7 @@ plotExprGSEAHeatmap <- function(res_gsea, res_deg, select, sort="logFC",
 #' @importFrom ggplot2 scale_fill_gradient2
 #' @importFrom scales muted
 #' @importFrom ggplot2 theme
-#' @importFrom ggplot2 element_text
+#' @importFrom ggplot2 element_blank
 #' @importFrom ggplot2 theme_minimal
 #' @return a ggplot2 object
 #' @export
@@ -153,6 +153,15 @@ plotExprGSEAHeatmap <- function(res_gsea, res_deg, select, sort="logFC",
 
 
 plotSummaryGSEAHeatmap <- function(reslist, selectID=NULL, show_top=20){
+
+
+  reslist <- lapply(reslist, function(x){
+    if (!is.data.frame(x)) {
+      x <- lapply(x, as.data.frame)
+      x <- Reduce(rbind, x)
+    }
+    return(x)
+  })
 
   for(i in 1:length(reslist)){
     reslist[[i]]$Type <- names(reslist)[i]
@@ -170,5 +179,6 @@ plotSummaryGSEAHeatmap <- function(reslist, selectID=NULL, show_top=20){
     scale_fill_gradient2(low = scales::muted("blue"),
                          high = scales::muted("red"))+
     theme_minimal()+
-    theme(panel.grid.major=element_blank(),panel.grid.minor=element_blank())
+    theme(panel.grid.major=element_blank(),
+          panel.grid.minor=element_blank())
 }
