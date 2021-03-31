@@ -294,7 +294,7 @@ plotExprBox2 <- function(expr, select, pdata,
     stat_compare_means(aes(group=group), label = label[1])+
     scale_fill_jco()+
     scale_color_jco()+
-    theme_minimal
+    theme_minimal()
   }
   return(p)
 }
