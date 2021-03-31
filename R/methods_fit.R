@@ -245,7 +245,8 @@ plotExprBox <- function(expr, select, pdata,
 #' @param select a vector.
 #' @param pdata pdata
 #' @param comparisons a list
-#' @param label "p.signif","p.format"
+#' @param label "p.signif" or "p.format"
+#' @param style "A" or "B"
 #' @param ncol the number of col
 #' @param nrow the number of now
 #' @importFrom reshape2 melt
@@ -263,6 +264,7 @@ plotExprBox <- function(expr, select, pdata,
 plotExprBox2 <- function(expr, select, pdata,
                          comparisons = list(c("S1", "S2")),
                          label=c("p.signif","p.format"),
+                         style="A",
                          ncol=2, nrow = 2
 ){
   select <- intersect(rownames(expr),select)
@@ -272,13 +274,22 @@ plotExprBox2 <- function(expr, select, pdata,
 
   expr <- reshape2::melt(expr, id.vars="group")
 
-  p <- ggplot(expr, aes(x=group, y=value, fill=group))+
+  if(style=="A"){
+    p <- ggplot(expr, aes(x=group, y=value, fill=group))+
     geom_violin()+
     geom_boxplot(width=0.2, fill="white")+
     scale_fill_jco()+
     stat_compare_means(label=label[1], comparisons = comparisons)+
     theme_minimal()+
     facet_wrap(variable~.,scales = "free", ncol=ncol, nrow=nrow)
+  }
+
+  if(style=="B"){
+  p <- ggplot(expr, aes(x=value, y=variable, fill=group))+
+    geom_boxplot(width=0.2, alpha=0.6)+
+    stat_compare_means(aes(group=group), label = label[1])+
+    scale_fill_jco()
+  }
   return(p)
 }
 

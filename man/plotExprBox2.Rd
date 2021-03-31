@@ -10,6 +10,7 @@ plotExprBox2(
   pdata,
   comparisons = list(c("S1", "S2")),
   label = c("p.signif", "p.format"),
+  style = "A",
   ncol = 2,
   nrow = 2
 )
@@ -23,7 +24,9 @@ plotExprBox2(
 
 \item{comparisons}{a list}
 
-\item{label}{"p.signif","p.format"}
+\item{label}{"p.signif" or "p.format"}
+
+\item{style}{"A" or "B"}
 
 \item{ncol}{the number of col}
 
