@@ -285,8 +285,10 @@ plotExprBox2 <- function(expr, select, pdata,
   }
 
   if(style=="B"){
-  p <- ggplot(expr, aes(x=value, y=variable, fill=group))+
-    geom_boxplot(width=0.2, alpha=0.6)+
+  p <- ggplot(expr, aes(x=variable, y=value,
+                        fill=group,
+                        color=group))+
+    geom_boxplot(width=0.3, alpha=0.6)+
     stat_compare_means(aes(group=group), label = label[1])+
     scale_fill_jco()
   }
