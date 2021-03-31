@@ -256,6 +256,7 @@ plotExprBox <- function(expr, select, pdata,
 #' @importFrom ggplot2 geom_boxplot
 #' @importFrom ggplot2 theme_minimal
 #' @importFrom ggsci scale_fill_jco
+#' @importFrom ggsci scale_color_jco
 #' @importFrom ggplot2 facet_wrap
 #' @importFrom ggpubr stat_compare_means
 #' @return a ggplot2 object
@@ -285,12 +286,15 @@ plotExprBox2 <- function(expr, select, pdata,
   }
 
   if(style=="B"){
+  expr$variable <- with(expr, reorder(variable, value, mean))
   p <- ggplot(expr, aes(x=variable, y=value,
                         fill=group,
                         color=group))+
     geom_boxplot(width=0.3, alpha=0.6)+
     stat_compare_means(aes(group=group), label = label[1])+
-    scale_fill_jco()
+    scale_fill_jco()+
+    scale_color_jco()+
+    theme_minimal
   }
   return(p)
 }
