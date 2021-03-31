@@ -255,6 +255,8 @@ plotExprBox <- function(expr, select, pdata,
 #' @importFrom ggplot2 geom_violin
 #' @importFrom ggplot2 geom_boxplot
 #' @importFrom ggplot2 theme_minimal
+#' @importFrom ggplot2 coord_flip
+#' @importFrom ggplot2 labs
 #' @importFrom ggsci scale_fill_jco
 #' @importFrom ggsci scale_color_jco
 #' @importFrom ggplot2 facet_wrap
@@ -282,19 +284,21 @@ plotExprBox2 <- function(expr, select, pdata,
     scale_fill_jco()+
     stat_compare_means(label=label[1], comparisons = comparisons)+
     theme_minimal()+
+    labs(x="",y="")+
     facet_wrap(variable~.,scales = "free", ncol=ncol, nrow=nrow)
   }
 
   if(style=="B"){
   expr$variable <- with(expr, reorder(variable, value, mean))
   p <- ggplot(expr, aes(x=variable, y=value,
-                        fill=group,
-                        color=group))+
-    geom_boxplot(width=0.3, alpha=0.6)+
+                        fill=group))+
+    geom_boxplot(width=0.8, alpha=0.6)+
     stat_compare_means(aes(group=group), label = label[1])+
     scale_fill_jco()+
-    scale_color_jco()+
-    theme_minimal()
+    #scale_color_jco()+
+    theme_minimal()+
+    labs(x="",y="")+
+    coord_flip()
   }
   return(p)
 }
