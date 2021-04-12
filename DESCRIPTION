@@ -1,6 +1,6 @@
 Package: yltool
 Title: The Research Tool Used By Yuanlong Hu.
-Version: 0.4.6
+Version: 0.4.7
 Authors@R: 
     person(given = "Yuanlong",
            family = "Hu",
@@ -43,7 +43,8 @@ Imports:
     clusterProfiler,
     ReactomePA,
     Rtsne,
-    ROCR
+    ROCR,
+    gtsummary
 Suggests: 
     knitr,
     rmarkdown
