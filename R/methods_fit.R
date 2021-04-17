@@ -194,7 +194,7 @@ plotBorutaImpHistory <- function(res,
     theme_minimal()+
     labs(x="Importance",y="Attributes",fill="")+
     theme(legend.justification=c(1,0), legend.position=c(1,0))+
-    scale_fill_manual(values = c("Confirmed"=="#EFC000FF",
+    scale_fill_manual(values = c("Confirmed"="#EFC000FF",
                                  "Tentative"="#0073C2FF",
                                  "Rejected"="#868686FF"))
   return(p)

@@ -42,8 +42,14 @@ plotExprGenesetHeatmap <- function(res, select, selectgene=NULL,genesetlist,
     genesetlist <- genesetlist[genesetlist$Gene %in% selectgene,]
   }
 
-  genesetlist$Gene <- with(genesetlist, reorder(Gene, logFC,mean))
+  genesetlist <- reshape2::dcast(genesetlist[,c("Geneset","Gene","logFC")], Geneset~Gene)
+  genesetlist <- reshape2::melt(genesetlist, id.vars="Geneset")
+  colnames(genesetlist) <- c("Geneset","Gene","logFC")
+  genesetlist$logFC <- ifelse(is.na(genesetlist$logFC),0,genesetlist$logFC)
+
+
   genesetlist$Geneset <- with(genesetlist, reorder(Geneset, Gene,length))
+  genesetlist$Gene <- with(genesetlist, reorder(Gene, logFC, max))
 
   p <- ggplot(genesetlist,aes(x=Gene,y=Geneset))+
     geom_tile(aes(fill=logFC))+
