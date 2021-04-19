@@ -195,7 +195,7 @@ plotCorHeatmap <- function(res, x, y,
 
 
   if(style=="B"){
-    data <- data[data$value>= mark_var,]
+    data <- data[abs(data$value)>= mark_var,]
   }
 
   data$row <- with(data, reorder(row, value, mean))
