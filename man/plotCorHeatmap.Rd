@@ -4,7 +4,7 @@
 \alias{plotCorHeatmap}
 \title{plotCorHeatmap}
 \usage{
-plotCorHeatmap(res, x, y, pvalueCutoff = 0.05, mark_var = 0.5)
+plotCorHeatmap(res, x, y, pvalueCutoff = 0.05, mark_var = 0.5, style = "B")
 }
 \arguments{
 \item{res}{Hmis}
@@ -16,6 +16,8 @@ plotCorHeatmap(res, x, y, pvalueCutoff = 0.05, mark_var = 0.5)
 \item{pvalueCutoff}{p-value cutoff}
 
 \item{mark_var}{mark "*"}
+
+\item{style}{"A" or "B"}
 }
 \value{
 ggplot object

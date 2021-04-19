@@ -156,6 +156,7 @@ convCorrMatrix <- function(mat, pmat, pvalueCutoff=0.05, corCutoff=0.5) {
 #' @param y y
 #' @param pvalueCutoff p-value cutoff
 #' @param mark_var mark "*"
+#' @param style "A" or "B"
 #' @importFrom reshape2 melt
 #' @importFrom ggplot2 ggplot
 #' @importFrom ggplot2 geom_tile
@@ -174,7 +175,8 @@ convCorrMatrix <- function(mat, pmat, pvalueCutoff=0.05, corCutoff=0.5) {
 
 plotCorHeatmap <- function(res, x, y,
                            pvalueCutoff=0.05,
-                           mark_var=0.5){
+                           mark_var=0.5,
+                           style="B"){
   cormat <- res$r
   pmat <- res$P
 
@@ -190,6 +192,11 @@ plotCorHeatmap <- function(res, x, y,
 
   data$value <- ifelse(data$pvalue<pvalueCutoff,data$value ,0)
   data$marker <- ifelse(abs(data$value)>= mark_var,"*","" )
+
+
+  if(style=="B"){
+    data <- data[data$value>= mark_var,]
+  }
 
   data$row <- with(data, reorder(row, value, mean))
   data$variable <- with(data, reorder(variable, value, mean))
