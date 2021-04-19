@@ -12,7 +12,8 @@ plotExprCor(
   point_group = TRUE,
   geom_smooth = TRUE,
   method = c("lm", "glm", "gam", "loess"),
-  smooth_group = TRUE
+  smooth_group = TRUE,
+  Cormethod = "pearson"
 )
 }
 \arguments{
@@ -31,6 +32,8 @@ plotExprCor(
 \item{method}{c("lm","glm","gam","loess")}
 
 \item{smooth_group}{logical}
+
+\item{Cormethod}{"pearson" or "spearman"}
 }
 \value{
 ggplot object
