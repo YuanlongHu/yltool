@@ -16,6 +16,8 @@
 #' @importFrom ggplot2 theme
 #' @importFrom ggplot2 element_text
 #' @importFrom ggplot2 theme_minimal
+#' @importFrom reshape2 dcast
+#' @importFrom reshape2 melt
 #' @return a ggplot2 object
 #' @export
 #' @author Yuanlong Hu
@@ -45,15 +47,20 @@ plotExprGenesetHeatmap <- function(res, select, selectgene=NULL,genesetlist,
   genesetlist <- reshape2::dcast(genesetlist[,c("Geneset","Gene","logFC")], Geneset~Gene)
   genesetlist <- reshape2::melt(genesetlist, id.vars="Geneset")
   colnames(genesetlist) <- c("Geneset","Gene","logFC")
+
   genesetlist$logFC <- ifelse(is.na(genesetlist$logFC),0,genesetlist$logFC)
 
-
-  genesetlist$Geneset <- with(genesetlist, reorder(Geneset, Gene,length))
-  genesetlist$Gene <- with(genesetlist, reorder(Gene, logFC, max))
+  genesetlist$Geneset <- with(genesetlist, reorder(Geneset, logFC, function(x){
+    x <- x[x != 0]
+    mean(x)
+  }))
+  genesetlist$Gene <- with(genesetlist, reorder(Gene, logFC, function(x){
+    ifelse(max(x)==0, min(x), max(x))
+  }))
 
   p <- ggplot(genesetlist,aes(x=Gene,y=Geneset))+
-    geom_tile(aes(fill=logFC))+
-    scale_fill_gradient2(low = muted("blue"), high = muted("red"))+
+    geom_tile(aes(fill=logFC), color="gray")+
+    scale_fill_gradient2(low = scales::muted("blue"), high = scales::muted("red"))+
     theme_minimal()+
     theme(axis.text.x = element_text(angle=45,hjust=1, vjust=1))
 

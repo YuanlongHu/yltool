@@ -4,7 +4,7 @@
 \alias{select_cox_single}
 \title{select_cox_single}
 \usage{
-select_cox_single(expr, time, status, digits = 2)
+select_cox_single(expr, time, status, digits = 5, adjust_p_method = "BH")
 }
 \arguments{
 \item{expr}{a matrix of expression values where rows correspond to genes and columns correspond to samples.}
@@ -14,6 +14,8 @@ select_cox_single(expr, time, status, digits = 2)
 \item{status}{status}
 
 \item{digits}{digits}
+
+\item{adjust_p_method}{adjust p-value}
 }
 \value{
 a data.frame

@@ -4,7 +4,7 @@
 \alias{select_logistic_single}
 \title{select_logistic_single}
 \usage{
-select_logistic_single(expr, feature = NULL, pdata)
+select_logistic_single(expr, feature = NULL, pdata, adjust_p_method = "BH")
 }
 \arguments{
 \item{expr}{a matrix of expression values where rows correspond to genes and columns correspond to samples.}
@@ -12,6 +12,8 @@ select_logistic_single(expr, feature = NULL, pdata)
 \item{feature}{feature}
 
 \item{pdata}{a vector.}
+
+\item{adjust_p_method}{adjust p-value}
 }
 \value{
 a data.frame

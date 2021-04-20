@@ -4,12 +4,13 @@
 #' @title select_lm_single
 #' @param expr a matrix of expression values where rows correspond to genes and columns correspond to samples.
 #' @param pdata a vector.
+#' @param adjust_p_method the method of adjusted p-value
 #' @importFrom pbapply pblapply
 #' @return a data.frame
 #' @export
 #' @author Yuanlong Hu
 
-select_lm_single <- function(expr, pdata){
+select_lm_single <- function(expr, pdata, adjust_p_method="BH"){
 
   expr <- as.data.frame(t(expr))
   if(!is.vector(pdata)) stop("The pdata must be a vector.")
@@ -21,15 +22,17 @@ select_lm_single <- function(expr, pdata){
     x <- as.formula(x)
     fit <- lm(x,expr)
     fit_s <- summary(fit)
-    df <- data.frame(y=as.character(fit_s$terms)[3],
+    df <- data.frame(Object=as.character(fit_s$terms)[3],
                      Beta=fit_s$coefficients[2,1],
-                     Pvalue=fit_s$coefficients[2,4],
+                     p.value=fit_s$coefficients[2,4],
                      CI1=confint(fit)[2,1],
                      CI2=confint(fit)[2,2]
     )
     return(df)
   })
   res_list <- Reduce(rbind, res_list)
+  rownames(res_list) <- res_list$Object
+  res_list$p.adjust <- p.adjust(res_list$p.value, method = adjust_p_method)
   return(res_list)
 }
 
@@ -41,6 +44,7 @@ select_lm_single <- function(expr, pdata){
 #' @param expr a matrix of expression values where rows correspond to genes and columns correspond to samples.
 #' @param feature feature
 #' @param pdata a vector.
+#' @param adjust_p_method adjust p-value
 #' @importFrom pbapply pblapply
 #' @importFrom ROCR prediction
 #' @importFrom ROCR performance
@@ -48,7 +52,8 @@ select_lm_single <- function(expr, pdata){
 #' @export
 #' @author Yuanlong Hu
 
-select_logistic_single <- function(expr, feature=NULL, pdata){
+select_logistic_single <- function(expr, feature=NULL, pdata,
+                                   adjust_p_method="BH"){
   if(is.null(feature)){
     feature <- rownames(expr)
   }
@@ -64,7 +69,7 @@ select_logistic_single <- function(expr, feature=NULL, pdata){
     CI <- confint(fit)
     fit <- as.data.frame(summary(fit)$coefficients)
     res <- c(exp(fit[2,1]),fit[2,4],exp(CI[2,1]), exp(CI[2,2]),auc)
-    names(res) <- c("OR","pvalue","CI_lower","CI_upper","AUC")
+    names(res) <- c("OR","p.value","CI_lower","CI_upper","AUC")
     res <- signif(res,2)
 
     return(res)
@@ -72,6 +77,8 @@ select_logistic_single <- function(expr, feature=NULL, pdata){
   names(res) <- feature
 
   res <- as.data.frame(t(as.data.frame(res)))
+  res$Object <- rownames(res)
+  res$p.adjust <- p.adjust(res$p.value, method = adjust_p_method)
   return(res)
 
 }
@@ -86,6 +93,7 @@ select_logistic_single <- function(expr, feature=NULL, pdata){
 #' @param time a vector.
 #' @param status status
 #' @param digits digits
+#' @param adjust_p_method adjust p-value
 #' @importFrom pbapply pblapply
 #' @importFrom survival coxph
 #' @importFrom survival Surv
@@ -93,7 +101,8 @@ select_logistic_single <- function(expr, feature=NULL, pdata){
 #' @export
 #' @author Yuanlong Hu
 
-select_cox_single <- function(expr, time, status, digits=2){
+select_cox_single <- function(expr, time, status, digits=5,
+                              adjust_p_method="BH"){
 
   formulas <- sapply(rownames(expr),
                           function(x) as.formula(paste0('Surv(time, status)~', "`",x,"`")))
@@ -122,8 +131,63 @@ select_cox_single <- function(expr, time, status, digits=2){
                          })
   res <- t(as.data.frame(res, check.names = FALSE))
   res <- as.data.frame(res)
+  res$Object <- rownames(res)
+  res$p.adjust <- p.adjust(res$p.adjust, method = "BH")
   return(res)
   }
+
+#' plot Forest
+#'
+#'
+#' @title plotForest
+#' @param res result
+#' @param select selected object
+#' @param cutoff cutoff
+#' @param pCutoff p-value Cutoff
+#' @param point column point
+#' @param xmin column xmin
+#' @param xmax column xmax
+#' @param pvalue column pvalue
+#' @importFrom ggplot2 ggplot
+#' @importFrom ggplot2 aes
+#' @importFrom ggplot2 geom_errorbar
+#' @importFrom ggplot2 geom_point
+#' @importFrom ggplot2 geom_vline
+#' @importFrom ggplot2 theme_minimal
+#' @importFrom ggplot2 labs
+#' @importFrom ggplot2 scale_color_manual
+#' @return a ggplot2 object
+#' @export
+#' @author Yuanlong Hu
+
+plotForest <- function(res, select=NULL, cutoff=1, pCutoff=0.05,
+                       point="HR",xmin="CI_lower", xmax="CI_upper",
+                       pvalue="p.value"){
+
+  if(!is.null(select)) res <- res[select,]
+
+  res$gene <- rownames(res)
+  res <- res[,c("gene",point, xmin, xmax, pvalue)]
+  colnames(res) <- c("gene","point", "xmin", "xmax","p.value")
+
+  res$gene <- with(res, reorder(gene, point, mean))
+  res$Type <- ifelse(res$p.value>= pCutoff,"None",
+                     ifelse(res$HR>cutoff, "Risk_factors",
+                            "Protective_factors")
+  )
+
+  ggplot(res, aes(x=point, y=gene))+
+    geom_errorbar(aes(xmin=xmin, xmax=xmax, color=Type),
+                  width=0.4)+
+    geom_point(shape=18, size=3.5, alpha=0.7)+
+    geom_vline(xintercept=cutoff, linetype=2, color="red")+
+    theme_minimal()+
+    labs(y="",x="")+
+    scale_color_manual(values=c("Risk_factors"="#EFC000FF",
+                                "Protective_factors"="#0073C2FF",
+                                "None"="#868686FF"))
+}
+
 
 
 #' Select by Boruta

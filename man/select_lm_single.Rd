@@ -4,12 +4,14 @@
 \alias{select_lm_single}
 \title{select_lm_single}
 \usage{
-select_lm_single(expr, pdata)
+select_lm_single(expr, pdata, adjust_p_method = "BH")
 }
 \arguments{
 \item{expr}{a matrix of expression values where rows correspond to genes and columns correspond to samples.}
 
 \item{pdata}{a vector.}
+
+\item{adjust_p_method}{the method of adjusted p-value}
 }
 \value{
 a data.frame
