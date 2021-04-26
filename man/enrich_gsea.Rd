@@ -9,7 +9,9 @@ enrich_gsea(
   pvalueCutoff = 0.05,
   kegg_internal_data = FALSE,
   GMTset = NULL,
-  useGMTset = FALSE
+  useGMTset = FALSE,
+  IDtoNAME = NA,
+  na.omit = TRUE
 )
 }
 \arguments{
@@ -22,6 +24,10 @@ enrich_gsea(
 \item{GMTset}{gmt file}
 
 \item{useGMTset}{use geneset from gmt file}
+
+\item{IDtoNAME}{ID to name}
+
+\item{na.omit}{Remove NA}
 }
 \value{
 a gseaResult object

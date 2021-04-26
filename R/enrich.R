@@ -7,9 +7,12 @@
 #' @param kegg_internal_data Use kegg internal data
 #' @param GMTset gmt file
 #' @param useGMTset use geneset from gmt file
+#' @param IDtoNAME ID to name
+#' @param na.omit Remove NA
 #' @importFrom clusterProfiler bitr
 #' @importFrom clusterProfiler gseKEGG
 #' @importFrom clusterProfiler gseGO
+#' @importFrom clusterProfiler gseMKEGG
 #' @importFrom ReactomePA gsePathway
 #' @importFrom clusterProfiler setReadable
 #' @importFrom clusterProfiler GSEA
@@ -18,9 +21,20 @@
 #' @export
 #' @author Yuanlong Hu
 
-enrich_gsea <- function(res, pvalueCutoff=0.05, kegg_internal_data=FALSE,
+enrich_gsea <- function(res, pvalueCutoff=0.05,
+                        kegg_internal_data=FALSE,
                         GMTset=NULL,
-                        useGMTset=FALSE){
+                        useGMTset=FALSE,
+                        IDtoNAME=NA,
+                        na.omit=TRUE){
+  if(na.omit){
+    res <- na.omit(res)
+    res <- res[res$logFC != Inf,]
+    res <- res[res$logFC != -Inf,]
+    res <- res[res$logFC != " ",]
+    res <- res[res$logFC != "",]
+  }
+
   if(useGMTset){
 
     message("** Build Genelist **")
@@ -29,14 +43,17 @@ enrich_gsea <- function(res, pvalueCutoff=0.05, kegg_internal_data=FALSE,
     genelist <- sort(genelist, decreasing = T)
 
     message("** Read GMT file **")
-    gmt <- immcp::read_gmt(GMTset)
+    if(is.data.frame(GMTset)) gmt <- GMTset[,1:2]
+    if(is.character(GMTset)) gmt <- clusterProfiler::read.gmt(GMTset)
+    if(is.list(GMTset)) gmt <- immcp::to_df(GMTset)
 
     message("** Run GSEA **")
     res <- clusterProfiler::GSEA(
       geneList=genelist,
       pvalueCutoff=0.05,
       minGSSize = 5,maxGSSize = 500,
-      TERM2GENE=gmt)
+      TERM2GENE=gmt,
+      TERM2NAME = IDtoNAME)
 
   }else{
 
@@ -56,6 +73,12 @@ enrich_gsea <- function(res, pvalueCutoff=0.05, kegg_internal_data=FALSE,
                                    pvalueCutoff = pvalueCutoff,
                                    verbose = TRUE,
                                    use_internal_data = kegg_internal_data)
+
+  message("** KEGG Module GSEA **")
+  mkegg <- clusterProfiler::gseMKEGG(geneList = genelist,
+                                     organism = 'hsa')
+
+
   message("** GO-BP GSEA **")
   ego_BP <- clusterProfiler::gseGO(geneList= genelist,
                                    OrgDb=org.Hs.eg.db,
@@ -86,19 +109,69 @@ enrich_gsea <- function(res, pvalueCutoff=0.05, kegg_internal_data=FALSE,
                                      verbose=TRUE, seed = FALSE,
                                      by = "fgsea")
 
-  message("** Biological Id translation2 **")
-  kegg <- clusterProfiler::setReadable(kegg, OrgDb = org.Hs.eg.db, keyType="ENTREZID")
-  ego_BP <- clusterProfiler::setReadable(ego_BP, OrgDb = org.Hs.eg.db, keyType="ENTREZID")
-  ego_CC <- clusterProfiler::setReadable(ego_CC, OrgDb = org.Hs.eg.db, keyType="ENTREZID")
-  ego_MF <- clusterProfiler::setReadable(ego_MF, OrgDb = org.Hs.eg.db, keyType="ENTREZID")
-  Reactome <- clusterProfiler::setReadable(Reactome, OrgDb = org.Hs.eg.db, keyType="ENTREZID")
+  message("** Wikipathways GSEA **")
+  genesetlist <- prepareGeneset("wikipathways")
+  Wikipathways <- GSEA(geneList = genelist,
+                       TERM2GENE = genesetlist$TERM2GENE,
+                       TERM2NAME = genesetlist$TERM2NAME,
+                       verbose = FALSE)
 
   message("** Summary Result **")
   res <- list(kegg=kegg,
+              mkegg=mkegg,
               go_CC=ego_CC,
               go_MF=ego_MF,
               go_BP=ego_BP,
-              Reactome=Reactome)
+              Reactome=Reactome,
+              Wikipathways=Wikipathways)
   }
+
+  res <- lapply(res, function(x){
+    x <- clusterProfiler::setReadable(x,
+                                      OrgDb = org.Hs.eg.db,
+                                      keyType="ENTREZID")
+  })
   return(res)
+}
+
+#' prepare Geneset
+#'
+#'
+#' @title prepareGeneset
+#' @param geneset Name
+#' @importFrom clusterProfiler read.gmt
+#' @importFrom tidyr separate
+#' @importFrom dplyr select
+#' @importFrom vroom vroom
+#' @importFrom tidyr unite
+#' @importFrom dplyr select
+#' @importFrom dplyr mutate
+#' @importFrom magrittr %>%
+#' @return a list
+#' @export
+#' @author Yuanlong Hu
+
+prepareGeneset <- function(geneset){
+
+  if(geneset == "wikipathways"){
+    wp2gene <- clusterProfiler::read.gmt("https://wikipathways-data.wmcloud.org/current/gmt/wikipathways-20210410-gmt-Homo_sapiens.gmt")
+    wp2gene <- wp2gene %>% tidyr::separate(ont, c("name","version","wpid","org"), "%")
+    wpid2gene <- wp2gene %>% dplyr::select(wpid, gene) #TERM2GENE
+    wpid2name <- wp2gene %>% dplyr::select(wpid, name) #TERM2NAME
+
+  genesetlist <- list(TERM2GENE=wpid2gene,
+                   TERM2NAME=wpid2name)
+  }
+
+  if(geneset=="CellMarker"){
+    cell_markers <- vroom::vroom('http://bio-bigdata.hrbmu.edu.cn/CellMarker/download/Human_cell_markers.txt') %>%
+      tidyr::unite("cellMarker", tissueType, cancerType, cellName, sep=", ") %>%
+      dplyr::select(cellMarker, geneID) %>%
+      dplyr::mutate(geneID = strsplit(geneID, ', '))
+
+    genesetlist=list(TERM2GENE=cell_markers)
+
+  }
+  return(genesetlist)
+
 }
