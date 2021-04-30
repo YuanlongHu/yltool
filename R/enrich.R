@@ -163,10 +163,10 @@ enrich_gsea <- function(res, pvalueCutoff=0.05,
 
 enrich_geneset <- function(genes, pvalueCutoff=0.05,
                            qvalueCutoff=0.05,
-                        kegg_internal_data=FALSE,
-                        GMTset=NULL,
-                        useGMTset=FALSE,
-                        IDtoNAME=NA){
+                           kegg_internal_data=FALSE,
+                           GMTset=NULL,
+                           useGMTset=FALSE,
+                           IDtoNAME=NA){
 
 
   if(useGMTset){
@@ -180,7 +180,7 @@ enrich_geneset <- function(genes, pvalueCutoff=0.05,
     if(is.character(GMTset)) gmt <- clusterProfiler::read.gmt(GMTset)
     if(is.list(GMTset)) gmt <- immcp::to_df(GMTset)
 
-    message("** Run GSEA **")
+    message("** Run Enrich **")
     res <- clusterProfiler::enricher(gene,
                                      TERM2GENE = gmt,
                                      TERM2NAME = IDtoNAME,
@@ -192,7 +192,7 @@ enrich_geneset <- function(genes, pvalueCutoff=0.05,
     message("** Biological Id translation **")
     genes <- clusterProfiler::bitr(genes,fromType="SYMBOL", toType="ENTREZID", OrgDb="org.Hs.eg.db")
     genes <- genes$ENTREZID
-    message("** KEGG GSEA **")
+    message("** KEGG Enrich **")
     kegg <- clusterProfiler::enrichKEGG(gene = genes,
                                         organism = 'hsa',
                                         pvalueCutoff = pvalueCutoff,
@@ -200,7 +200,7 @@ enrich_geneset <- function(genes, pvalueCutoff=0.05,
                                         qvalueCutoff = qvalueCutoff,
                                         use_internal_data = kegg_internal_data)
 
-    message("** KEGG Module GSEA **")
+    message("** KEGG Module Enrich **")
     mkegg <- clusterProfiler::enrichMKEGG(gene = gene,
                                           organism = 'hsa',
                                           pvalueCutoff = pvalueCutoff,
@@ -208,28 +208,28 @@ enrich_geneset <- function(genes, pvalueCutoff=0.05,
                                           qvalueCutoff = qvalueCutoff)
 
 
-    message("** GO-BP GSEA **")
+    message("** GO-BP Enrich **")
     ego_BP <- clusterProfiler::enrichGO(gene= genes,OrgDb=org.Hs.eg.db,
                                                ont = "BP",
                                                pAdjustMethod = "BH",
                                                pvalueCutoff  = pvalueCutoff,
                                                qvalueCutoff  = 0.05,
                                                readable      = FALSE)
-    message("** GO-CC GSEA **")
+    message("** GO-CC Enrich **")
     ego_CC <- clusterProfiler::enrichGO(gene = genes,OrgDb=org.Hs.eg.db,
                                         ont = "CC",
                                         pAdjustMethod = "BH",
                                         pvalueCutoff = pvalueCutoff,
                                         qvalueCutoff = 0.05,
                                         readable = FALSE)
-    message("** GO-MF GSEA **")
+    message("** GO-MF Enrich **")
     ego_MF <- clusterProfiler::enrichGO(gene = genes,OrgDb = org.Hs.eg.db,
                                                ont = "BP",
                                                pAdjustMethod = "BH",
                                                pvalueCutoff  = pvalueCutoff,
                                                qvalueCutoff  = 0.05,
                                                readable      = FALSE)
-    message("** Reactome GSEA **")
+    message("** Reactome Enrich **")
     Reactome <- ReactomePA::enrichPathway(gene = genes,
                                           organism = 'hsa',
                                           pvalueCutoff = pvalueCutoff,
@@ -237,7 +237,7 @@ enrich_geneset <- function(genes, pvalueCutoff=0.05,
                                           qvalueCutoff = qvalueCutoff,
                                           readable = FALSE)
 
-    message("** Wikipathways GSEA **")
+    message("** Wikipathways Enrich **")
     genesetlist <- prepareGeneset("wikipathways")
     Wikipathways <- clusterProfiler::enricher(gene = genelist,
                          TERM2GENE = genesetlist$TERM2GENE,
