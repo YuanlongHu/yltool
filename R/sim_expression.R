@@ -186,7 +186,7 @@ plotCorHeatmap <- function(res, x, y,
   data <- cormat
   data$pvalue <- pmat$value
 
-  data$marker <- ifelse(data$pvalue<pvalueCutoff,data$value ,"×")
+  data$marker <- ifelse(data$pvalue<pvalueCutoff,NA,"×")
   #data$marker <- ifelse(abs(data$value)>= mark_var,"*","" )
 
   data$row <- with(data, reorder(row, value, mean))
