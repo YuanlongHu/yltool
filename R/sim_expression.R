@@ -155,8 +155,6 @@ convCorrMatrix <- function(mat, pmat, pvalueCutoff=0.05, corCutoff=0.5) {
 #' @param x x
 #' @param y y
 #' @param pvalueCutoff p-value cutoff
-#' @param mark_var mark "*"
-#' @param style "A" or "B"
 #' @importFrom reshape2 melt
 #' @importFrom ggplot2 ggplot
 #' @importFrom ggplot2 geom_tile

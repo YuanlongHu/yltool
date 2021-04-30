@@ -14,10 +14,6 @@ plotCorHeatmap(res, x, y, pvalueCutoff = 0.05)
 \item{y}{y}
 
 \item{pvalueCutoff}{p-value cutoff}
-
-\item{mark_var}{mark "*"}
-
-\item{style}{"A" or "B"}
 }
 \value{
 ggplot object
