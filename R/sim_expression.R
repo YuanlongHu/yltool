@@ -174,9 +174,7 @@ convCorrMatrix <- function(mat, pmat, pvalueCutoff=0.05, corCutoff=0.5) {
 
 
 plotCorHeatmap <- function(res, x, y,
-                           pvalueCutoff=0.05,
-                           mark_var=0.5,
-                           style="B"){
+                           pvalueCutoff=0.05){
   cormat <- res$r
   pmat <- res$P
 
@@ -190,13 +188,8 @@ plotCorHeatmap <- function(res, x, y,
   data <- cormat
   data$pvalue <- pmat$value
 
-  data$value <- ifelse(data$pvalue<pvalueCutoff,data$value ,0)
-  data$marker <- ifelse(abs(data$value)>= mark_var,"*","" )
-
-
-  if(style=="B"){
-    data <- data[abs(data$value)>= mark_var,]
-  }
+  data$marker <- ifelse(data$pvalue<pvalueCutoff,data$value ,"×")
+  #data$marker <- ifelse(abs(data$value)>= mark_var,"*","" )
 
   data$row <- with(data, reorder(row, value, mean))
   data$variable <- with(data, reorder(variable, value, mean))

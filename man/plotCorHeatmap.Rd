@@ -4,7 +4,7 @@
 \alias{plotCorHeatmap}
 \title{plotCorHeatmap}
 \usage{
-plotCorHeatmap(res, x, y, pvalueCutoff = 0.05, mark_var = 0.5, style = "B")
+plotCorHeatmap(res, x, y, pvalueCutoff = 0.05)
 }
 \arguments{
 \item{res}{Hmis}
