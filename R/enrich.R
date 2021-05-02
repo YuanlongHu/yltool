@@ -181,10 +181,11 @@ enrich_geneset <- function(genes, pvalueCutoff=0.05,
     if(is.list(GMTset)) gmt <- immcp::to_df(GMTset)
 
     message("** Run Enrich **")
-    res <- clusterProfiler::enricher(gene,
+    res <- clusterProfiler::enricher(genes,
                                      TERM2GENE = gmt,
                                      TERM2NAME = IDtoNAME,
-                                     pvalueCutoff=pvalueCutoff,qvalueCutoff = qvalueCutoff,
+                                     pvalueCutoff=pvalueCutoff,
+                                     qvalueCutoff = qvalueCutoff,
                                      minGSSize = 5,maxGSSize = 500)
 
   }else{
@@ -196,7 +197,7 @@ enrich_geneset <- function(genes, pvalueCutoff=0.05,
     kegg <- clusterProfiler::enrichKEGG(gene = genes,
                                         organism = 'hsa',
                                         pvalueCutoff = pvalueCutoff,
-                                        minGSSize = 5,
+                                        minGSSize = 5,maxGSSize = 500,
                                         qvalueCutoff = qvalueCutoff,
                                         use_internal_data = kegg_internal_data)
 
@@ -204,7 +205,7 @@ enrich_geneset <- function(genes, pvalueCutoff=0.05,
     mkegg <- clusterProfiler::enrichMKEGG(gene = gene,
                                           organism = 'hsa',
                                           pvalueCutoff = pvalueCutoff,
-                                          minGSSize = 5,
+                                          minGSSize = 5,maxGSSize = 500,
                                           qvalueCutoff = qvalueCutoff)
 
 
@@ -213,36 +214,36 @@ enrich_geneset <- function(genes, pvalueCutoff=0.05,
                                                ont = "BP",
                                                pAdjustMethod = "BH",
                                                pvalueCutoff  = pvalueCutoff,
-                                               qvalueCutoff  = 0.05,
+                                               qvalueCutoff  = qvalueCutoff,
                                                readable      = FALSE)
     message("** GO-CC Enrich **")
     ego_CC <- clusterProfiler::enrichGO(gene = genes,OrgDb=org.Hs.eg.db,
                                         ont = "CC",
                                         pAdjustMethod = "BH",
                                         pvalueCutoff = pvalueCutoff,
-                                        qvalueCutoff = 0.05,
+                                        qvalueCutoff = qvalueCutoff,
                                         readable = FALSE)
     message("** GO-MF Enrich **")
     ego_MF <- clusterProfiler::enrichGO(gene = genes,OrgDb = org.Hs.eg.db,
                                                ont = "BP",
                                                pAdjustMethod = "BH",
                                                pvalueCutoff  = pvalueCutoff,
-                                               qvalueCutoff  = 0.05,
+                                               qvalueCutoff  = qvalueCutoff,
                                                readable      = FALSE)
     message("** Reactome Enrich **")
     Reactome <- ReactomePA::enrichPathway(gene = genes,
-                                          organism = 'hsa',
                                           pvalueCutoff = pvalueCutoff,
-                                          minGSSize = 5,
+                                          minGSSize = 5,maxGSSize = 500,
                                           qvalueCutoff = qvalueCutoff,
                                           readable = FALSE)
 
     message("** Wikipathways Enrich **")
     genesetlist <- prepareGeneset("wikipathways")
-    Wikipathways <- clusterProfiler::enricher(gene = genelist,
+    Wikipathways <- clusterProfiler::enricher(gene = genes,
                          TERM2GENE = genesetlist$TERM2GENE,
                          TERM2NAME = genesetlist$TERM2NAME,
-                         pvalueCutoff=pvalueCutoff,qvalueCutoff = qvalueCutoff,
+                         pvalueCutoff=pvalueCutoff,
+                         qvalueCutoff = qvalueCutoff,
                          minGSSize = 5,maxGSSize = 500)
 
     message("** Summary Result **")
@@ -259,6 +260,7 @@ enrich_geneset <- function(genes, pvalueCutoff=0.05,
     x <- clusterProfiler::setReadable(x,
                                       OrgDb = org.Hs.eg.db,
                                       keyType="ENTREZID")
+    return(x)
   })
   return(res)
 }
@@ -288,7 +290,7 @@ prepareGeneset <- function(geneset){
 
   if(geneset == "wikipathways"){
     wp2gene <- clusterProfiler::read.gmt("https://wikipathways-data.wmcloud.org/current/gmt/wikipathways-20210410-gmt-Homo_sapiens.gmt")
-    wp2gene <- wp2gene %>% tidyr::separate(ont, c("name","version","wpid","org"), "%")
+    wp2gene <- wp2gene %>% tidyr::separate(term, c("name","version","wpid","org"), "%")
     wpid2gene <- wp2gene %>% dplyr::select(wpid, gene) #TERM2GENE
     wpid2name <- wp2gene %>% dplyr::select(wpid, name) #TERM2NAME
 
