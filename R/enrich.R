@@ -117,6 +117,8 @@ enrich_gsea <- function(res, pvalueCutoff=0.05,
   Wikipathways <- GSEA(geneList = genelist,
                        TERM2GENE = genesetlist$TERM2GENE,
                        TERM2NAME = genesetlist$TERM2NAME,
+                       pvalueCutoff=pvalueCutoff,
+                       minGSSize = 5,maxGSSize = 500,
                        verbose = FALSE)
 
   message("** Summary Result **")
@@ -130,9 +132,14 @@ enrich_gsea <- function(res, pvalueCutoff=0.05,
   }
 
   res <- lapply(res, function(x){
-    x <- clusterProfiler::setReadable(x,
-                                      OrgDb = org.Hs.eg.db,
-                                      keyType="ENTREZID")
+    if(is.null(x)){
+      return(x)
+    }else{
+      x <- clusterProfiler::setReadable(x,
+                                        OrgDb = org.Hs.eg.db,
+                                        keyType="ENTREZID")
+      return(x)
+    }
   })
   return(res)
 }
@@ -202,7 +209,7 @@ enrich_geneset <- function(genes, pvalueCutoff=0.05,
                                         use_internal_data = kegg_internal_data)
 
     message("** KEGG Module Enrich **")
-    mkegg <- clusterProfiler::enrichMKEGG(gene = gene,
+    mkegg <- clusterProfiler::enrichMKEGG(gene = genes,
                                           organism = 'hsa',
                                           pvalueCutoff = pvalueCutoff,
                                           minGSSize = 5,maxGSSize = 500,
@@ -211,11 +218,11 @@ enrich_geneset <- function(genes, pvalueCutoff=0.05,
 
     message("** GO-BP Enrich **")
     ego_BP <- clusterProfiler::enrichGO(gene= genes,OrgDb=org.Hs.eg.db,
-                                               ont = "BP",
-                                               pAdjustMethod = "BH",
-                                               pvalueCutoff  = pvalueCutoff,
-                                               qvalueCutoff  = qvalueCutoff,
-                                               readable      = FALSE)
+                                        ont = "BP",
+                                        pAdjustMethod = "BH",
+                                        pvalueCutoff  = pvalueCutoff,
+                                        qvalueCutoff  = qvalueCutoff,
+                                        readable      = FALSE)
     message("** GO-CC Enrich **")
     ego_CC <- clusterProfiler::enrichGO(gene = genes,OrgDb=org.Hs.eg.db,
                                         ont = "CC",
@@ -225,11 +232,11 @@ enrich_geneset <- function(genes, pvalueCutoff=0.05,
                                         readable = FALSE)
     message("** GO-MF Enrich **")
     ego_MF <- clusterProfiler::enrichGO(gene = genes,OrgDb = org.Hs.eg.db,
-                                               ont = "BP",
-                                               pAdjustMethod = "BH",
-                                               pvalueCutoff  = pvalueCutoff,
-                                               qvalueCutoff  = qvalueCutoff,
-                                               readable      = FALSE)
+                                        ont = "BP",
+                                        pAdjustMethod = "BH",
+                                        pvalueCutoff  = pvalueCutoff,
+                                        qvalueCutoff  = qvalueCutoff,
+                                        readable      = FALSE)
     message("** Reactome Enrich **")
     Reactome <- ReactomePA::enrichPathway(gene = genes,
                                           pvalueCutoff = pvalueCutoff,
@@ -240,11 +247,11 @@ enrich_geneset <- function(genes, pvalueCutoff=0.05,
     message("** Wikipathways Enrich **")
     genesetlist <- prepareGeneset("wikipathways")
     Wikipathways <- clusterProfiler::enricher(gene = genes,
-                         TERM2GENE = genesetlist$TERM2GENE,
-                         TERM2NAME = genesetlist$TERM2NAME,
-                         pvalueCutoff=pvalueCutoff,
-                         qvalueCutoff = qvalueCutoff,
-                         minGSSize = 5,maxGSSize = 500)
+                                              TERM2GENE = genesetlist$TERM2GENE,
+                                              TERM2NAME = genesetlist$TERM2NAME,
+                                              pvalueCutoff=pvalueCutoff,
+                                              qvalueCutoff = qvalueCutoff,
+                                              minGSSize = 5,maxGSSize = 500)
 
     message("** Summary Result **")
     res <- list(kegg=kegg,
@@ -257,10 +264,14 @@ enrich_geneset <- function(genes, pvalueCutoff=0.05,
   }
 
   res <- lapply(res, function(x){
-    x <- clusterProfiler::setReadable(x,
-                                      OrgDb = org.Hs.eg.db,
-                                      keyType="ENTREZID")
-    return(x)
+    if(is.null(x)){
+      return(x)
+    }else{
+      x <- clusterProfiler::setReadable(x,
+                                        OrgDb = org.Hs.eg.db,
+                                        keyType="ENTREZID")
+      return(x)
+    }
   })
   return(res)
 }
