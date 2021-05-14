@@ -27,7 +27,8 @@ enrich_gsea <- function(res, pvalueCutoff=0.05,
                         GMTset=NULL,
                         useGMTset=FALSE,
                         IDtoNAME=NA,
-                        na.omit=TRUE){
+                        na.omit=TRUE,
+                        Wikipathways=TRUE){
   if(na.omit){
     res <- na.omit(res)
     res <- res[res$logFC != Inf,]
@@ -111,15 +112,19 @@ enrich_gsea <- function(res, pvalueCutoff=0.05,
                                      pAdjustMethod= "fdr",
                                      verbose=TRUE, seed = FALSE,
                                      by = "fgsea")
-
-  message("** Wikipathways GSEA **")
-  genesetlist <- prepareGeneset("wikipathways")
-  Wikipathways <- GSEA(geneList = genelist,
+  if(Wikipathways){
+    message("** Wikipathways GSEA **")
+    genesetlist <- prepareGeneset("wikipathways")
+    Wikipathways <- GSEA(geneList = genelist,
                        TERM2GENE = genesetlist$TERM2GENE,
                        TERM2NAME = genesetlist$TERM2NAME,
                        pvalueCutoff=pvalueCutoff,
                        minGSSize = 5,maxGSSize = 500,
                        verbose = FALSE)
+  }else{
+    Wikipathways <- NULL
+  }
+
 
   message("** Summary Result **")
   res <- list(kegg=kegg,
@@ -173,7 +178,8 @@ enrich_geneset <- function(genes, pvalueCutoff=0.05,
                            kegg_internal_data=FALSE,
                            GMTset=NULL,
                            useGMTset=FALSE,
-                           IDtoNAME=NA){
+                           IDtoNAME=NA,
+                           Wikipathways=TRUE){
 
 
   if(useGMTset){
@@ -243,7 +249,7 @@ enrich_geneset <- function(genes, pvalueCutoff=0.05,
                                           minGSSize = 5,maxGSSize = 500,
                                           qvalueCutoff = qvalueCutoff,
                                           readable = FALSE)
-
+if(Wikipathways){
     message("** Wikipathways Enrich **")
     genesetlist <- prepareGeneset("wikipathways")
     Wikipathways <- clusterProfiler::enricher(gene = genes,
@@ -252,6 +258,10 @@ enrich_geneset <- function(genes, pvalueCutoff=0.05,
                                               pvalueCutoff=pvalueCutoff,
                                               qvalueCutoff = qvalueCutoff,
                                               minGSSize = 5,maxGSSize = 500)
+}else{
+  Wikipathways <- NULL
+}
+
 
     message("** Summary Result **")
     res <- list(kegg=kegg,

@@ -11,7 +11,8 @@ enrich_geneset(
   kegg_internal_data = FALSE,
   GMTset = NULL,
   useGMTset = FALSE,
-  IDtoNAME = NA
+  IDtoNAME = NA,
+  Wikipathways = TRUE
 )
 }
 \arguments{

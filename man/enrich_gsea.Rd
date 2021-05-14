@@ -11,7 +11,8 @@ enrich_gsea(
   GMTset = NULL,
   useGMTset = FALSE,
   IDtoNAME = NA,
-  na.omit = TRUE
+  na.omit = TRUE,
+  Wikipathways = TRUE
 )
 }
 \arguments{
