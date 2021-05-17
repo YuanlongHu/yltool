@@ -184,9 +184,9 @@ enrich_geneset <- function(genes, pvalueCutoff=0.05,
 
   if(useGMTset){
 
-    message("** Build Genelist **")
-    genes <- clusterProfiler::bitr(genes,fromType="SYMBOL", toType="ENTREZID", OrgDb="org.Hs.eg.db")
-    genes <- genes$ENTREZID
+    #message("** Build Genelist **")
+    #genes <- clusterProfiler::bitr(genes,fromType="SYMBOL", toType="ENTREZID", OrgDb="org.Hs.eg.db")
+    #genes <- genes$ENTREZID
 
     message("** Read GMT file **")
     if(is.data.frame(GMTset)) gmt <- GMTset[,1:2]
