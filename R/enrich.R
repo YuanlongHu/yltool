@@ -199,7 +199,7 @@ enrich_geneset <- function(genes, pvalueCutoff=0.05,
                                      TERM2NAME = IDtoNAME,
                                      pvalueCutoff=pvalueCutoff,
                                      qvalueCutoff = qvalueCutoff,
-                                     minGSSize = 5,maxGSSize = 500)
+                                     minGSSize = 1,maxGSSize = 500)
 
   }else{
 
