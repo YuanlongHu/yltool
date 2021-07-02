@@ -172,7 +172,7 @@ plotForest <- function(res, select=NULL, cutoff=1, pCutoff=0.05,
 
   res$gene <- with(res, reorder(gene, point, mean))
   res$Type <- ifelse(res$p.value>= pCutoff,"None",
-                     ifelse(res$HR>cutoff, "Risk_factors",
+                     ifelse(res$point>cutoff, "Risk_factors",
                             "Protective_factors")
   )
 
