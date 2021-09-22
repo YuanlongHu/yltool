@@ -45,7 +45,8 @@ Imports:
     Rtsne,
     ROCR,
     gtsummary,
-    igraph
+    igraph,
+    TwoSampleMR
 Suggests: 
     knitr,
     rmarkdown
