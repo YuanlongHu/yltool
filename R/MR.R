@@ -6,7 +6,7 @@
 #' @param outID Outcome IDs
 #' @param p1 Significance threshold.
 #' @param r2 Clumping r2 cut off.
-#' @param kb Clumping distance cutoff
+#' @param kb Clumping distance cutoff.
 #' @param maf_threshold MAF threshold to try to infer palindromic SNPs.
 #' @param method_list List of methods to use in analysis.
 #' @param proxies Look for LD tags?
@@ -92,11 +92,12 @@ runTwoSampleMR2 <- function(expID, outID,
 #'
 #'
 #' @title runTwoSampleMR
-#' @param expID IDs
-#' @param outID Outcome IDs
+#' @param expID IDs.
+#' @param outID Outcome IDs.
+#' @param output output type, harmonise or mr.
 #' @param p1 Significance threshold.
 #' @param r2 Clumping r2 cut off.
-#' @param kb Clumping distance cutoff
+#' @param kb Clumping distance cutoff.
 #' @param maf_threshold MAF threshold to try to infer palindromic SNPs.
 #' @param method_list List of methods to use in analysis.
 #' @param proxies Look for LD tags?
@@ -109,7 +110,7 @@ runTwoSampleMR2 <- function(expID, outID,
 #' @return a MR object
 #' @export
 #' @author Yuanlong Hu
-runTwoSampleMR <- function(expID, outID,
+runTwoSampleMR <- function(expID, outID,output="harmonise",
                             p1=5e-8, r2=0.01, kb=1000,
                             maf_threshold=0.01,
                             method_list = subset(mr_method_list(), use_by_default)$obj,
@@ -117,7 +118,7 @@ runTwoSampleMR <- function(expID, outID,
 
   message("*** Find instruments ***")
 
-  exp <- extract_instruments(outcomes=x,
+  exp <- extract_instruments(outcomes=expID,
                             p1=p1, clump=T, r2=r2,
                             kb=kb, access_token = NULL)
 
@@ -137,5 +138,7 @@ runTwoSampleMR <- function(expID, outID,
 
   message("*** Run MR ***")
   res <- mr(x, method_list=method_list)
-  return(res)
+
+  if(output == "harmonise") return(harmonise)
+  if(output == "mr") return(res)
 }

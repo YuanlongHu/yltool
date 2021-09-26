@@ -7,6 +7,7 @@
 runTwoSampleMR(
   expID,
   outID,
+  output = "harmonise",
   p1 = 5e-08,
   r2 = 0.01,
   kb = 1000,
@@ -16,15 +17,17 @@ runTwoSampleMR(
 )
 }
 \arguments{
-\item{expID}{IDs}
+\item{expID}{IDs.}
 
-\item{outID}{Outcome IDs}
+\item{outID}{Outcome IDs.}
+
+\item{output}{output type, harmonise or mr.}
 
 \item{p1}{Significance threshold.}
 
 \item{r2}{Clumping r2 cut off.}
 
-\item{kb}{Clumping distance cutoff}
+\item{kb}{Clumping distance cutoff.}
 
 \item{maf_threshold}{MAF threshold to try to infer palindromic SNPs.}
 

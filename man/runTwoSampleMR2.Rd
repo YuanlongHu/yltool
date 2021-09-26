@@ -24,7 +24,7 @@ runTwoSampleMR2(
 
 \item{r2}{Clumping r2 cut off.}
 
-\item{kb}{Clumping distance cutoff}
+\item{kb}{Clumping distance cutoff.}
 
 \item{maf_threshold}{MAF threshold to try to infer palindromic SNPs.}
 
