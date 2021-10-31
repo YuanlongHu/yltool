@@ -2,6 +2,7 @@
 
 export(AssoAnalysis)
 export(MIC_pvalue)
+export(ZSscore)
 export(add_row)
 export(ann_expr)
 export(ann_expr2)
